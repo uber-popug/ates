@@ -1,26 +1,30 @@
 workspace {
     model {
-        user = person "Client" "A user of the PUber"
-        puber = softwareSystem "PUber" "Uber for the Popugs" {
-            user -> this "Order"
-        }
-
+    group "UberPopug Inc." {
         employee = person "Employee"
-        auth = softwareSystem "Auth" "UberPopug Auth"
-        ates = softwareSystem "Awesome Task Exchange System" "UberPopug aTES" {
-            this -> auth "Auth"
-
-            spa = container "Web application" {
+        
+        email = softwareSystem "E-mail System" "The internal UberPopug e-mail system"
+        auth = softwareSystem "Auth" "UberPopug OAuth Server"
+        
+        ates = softwareSystem "Awesome Task Exchange System" "UberPopug aTES" "aTES" {
+            tags aTES
+            this -> auth "Authorize requests"
+            
+            spa = container "aTES Web Application" {
                 tags Web
-                employee -> this "Uses"
             }
-
+        
+            taskDb = container "Task DB" {
+                tags Database
+            }
+            accountDb = container "Accounting DB" {
+                tags Database
+            }
+            
             tasks = container "Tasks"
             account = container "Accounting"
             analytics = container "Analytics"
-            notifications = container "Notifications" {
-                this -> employee "Send dayly reports"
-            }
+            notifications = container "Notifications"
 
             summarize = container "Summarize" {
                 tags "Robot"
@@ -28,35 +32,42 @@ workspace {
                 this -> analytics "Update"
             }
 
-            gateway = container "Gateway" {
-                spa -> this "Rest API"
-
-                this -> auth "Auth"
-
-                this -> tasks "Assignee"
-                this -> tasks "List"
-                this -> tasks "Complete"
-
-                this -> account "Balance"
-                this -> account "Logs"
-                this -> account "Stats"
-            }
+            gateway = container "Gateway"
+            
+            
+            gateway -> auth "Authorize requests"
+            gateway -> tasks "Assignee"
+            gateway -> tasks "List"
+            gateway -> tasks "Complete"
+            gateway -> account "Balance"
+            gateway -> account "Logs"
+            gateway -> analytics "Stats"
+            
+            spa -> gateway "REST API"
         }
+        
+        
+        # employee interactions
+        employee -> auth "SSO"
+        employee -> spa "Do tasking"
+        employee -> email "Read dayly reports"
+        notifications -> email "Send dayly reports"
+    }
     }
 
     views {
         systemLandscape {
-            include *
-            autoLayout
+            include employee auth ates email
+            autolayout tb
         }
 
         container ates {
             include *
-            autolayout lr
+            autolayout bt
         }
 
         styles {
-            element "Software System" {
+            element "aTES" {
                 background #1168bd
                 color #ffffff
             }
@@ -73,6 +84,10 @@ workspace {
 
             element "Web" {
                 shape WebBrowser
+            }
+            
+            element "Database" {
+                shape cylinder
             }
         }
     }
