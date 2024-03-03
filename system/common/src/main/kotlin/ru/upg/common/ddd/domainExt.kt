@@ -1,16 +1,12 @@
-package ru.upg.cqrs
+package ru.upg.common.ddd
 
-import ru.upg.ates.AtesKafka
-
-
-interface Domain<D : Domain<D>> {
-    val kafka: AtesKafka
-}
-
+import ru.upg.common.cqrs.Command
+import ru.upg.common.cqrs.Query
+import ru.upg.common.cqrs.ReadModel
 
 fun <D : Domain<D>> D.execute(command: Command<D, *>) {
     command.execute(this).forEach { event ->
-        eventsListener(event)
+        broker.publish(event)
     }
 }
 

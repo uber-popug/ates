@@ -7,9 +7,9 @@ import ru.upg.ates.event.TaskChange
 import ru.upg.ates.tasks.TasksDomain
 import ru.upg.ates.tasks.queries.GetRandomWorkers
 import ru.upg.ates.tasks.table.TaskTable
-import ru.upg.cqrs.Command
-import ru.upg.cqrs.Event
-import ru.upg.cqrs.IAggregate
+import ru.upg.common.cqrs.Command
+import ru.upg.common.events.Event
+import ru.upg.common.cqrs.IAggregate
 import java.util.*
 
 class CreateTaskCommand(

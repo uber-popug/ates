@@ -6,8 +6,8 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import ru.upg.ates.event.Role
 import ru.upg.ates.tasks.TasksDomain
 import ru.upg.ates.tasks.table.UserTable
-import ru.upg.cqrs.Query
-import ru.upg.cqrs.ReadModel
+import ru.upg.common.cqrs.Query
+import ru.upg.common.cqrs.ReadModel
 import java.util.UUID
 
 class GetRandomWorkers(

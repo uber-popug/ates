@@ -1,4 +1,7 @@
-package ru.upg.cqrs
+package ru.upg.common.cqrs
+
+import ru.upg.common.ddd.Domain
+import ru.upg.common.events.Event
 
 interface IAggregate
 

@@ -26,6 +26,9 @@ class TestKafka {
         "security.protocol" to "PLAINTEXT"
     )
 
+    private val producer = KafkaProducer<String, ByteArray>(producerProps)
+
+
     private val consumerProps = { group: String ->
         mapOf(
             "bootstrap.servers" to bootstrapServers,
@@ -37,39 +40,42 @@ class TestKafka {
         )
     }
 
+    private val consumer = KafkaConsumer<String, ByteArray>(consumerProps("ates-test"))
+
 
     @Test
     fun testCheck() {
-        produce()
-        consume()
+        produce("test1")
+        consume("test1")
+        produce("test2")
+        consume("test2")
+
+        producer.close()
+        consumer.close()
     }
 
-    private fun produce() {
-        val testRecord = ProducerRecord("test", "1", "Hello world!".encodeToByteArray())
+    private fun produce(topic: String) {
+        val testRecord = ProducerRecord(topic, "1", "Hello world!".encodeToByteArray())
 
-        KafkaProducer<String, ByteArray>(producerProps).use {  producer ->
-            producer.send(testRecord) { meta, ex ->
-                ex?.printStackTrace()
-                println("record sent $meta")
-            }
+        producer.send(testRecord) { meta, ex ->
+            ex?.printStackTrace()
+            println("record sent $meta")
         }
     }
 
-    private fun consume() {
+    private fun consume(topic: String) {
         tailrec fun <T> repeatUntilSome(block: () -> T?): T =
             block() ?: repeatUntilSome(block)
 
-        KafkaConsumer<String, ByteArray>(consumerProps("ates-test")).use { consumer ->
-            consumer.subscribe(listOf("test"))
+        consumer.subscribe(listOf(topic))
 
-            val message = repeatUntilSome {
-                val duration = 400.milliseconds.toJavaDuration()
-                consumer.poll(duration)
-                    .map { String(it.value()) }
-                    .firstOrNull()
-            }
-
-            println("received message $message")
+        val message = repeatUntilSome {
+            val duration = 400.milliseconds.toJavaDuration()
+            consumer.poll(duration)
+                .map { String(it.value()) }
+                .firstOrNull()
         }
+
+        println("received message $message")
     }
 }
