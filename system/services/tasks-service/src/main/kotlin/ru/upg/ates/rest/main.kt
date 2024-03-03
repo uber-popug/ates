@@ -15,11 +15,10 @@ fun main() {
     // todo move to config
     // setting listener to track user changes
     val kafkaServer = "http://localhost:9094"
-    val consumerGroup = "ates-tasks"
     /*ListenEvents(kafkaServer, consumerGroup)
         .listen(AtesTopic.Users, SaveUserChange(UsersDao())::save)*/
 
-    val domain = buildDomain()
+    val domain = buildDomain(kafkaServer)
     val mapper = jacksonObjectMapper()
 
     // setting Tasks service REST API
@@ -41,14 +40,12 @@ fun main() {
     ).asServer(Undertow(8801)).start()
 }
 
-private fun buildDomain(): TasksDomain {
+private fun buildDomain(kafkaUrl: String): TasksDomain {
     val tables = TasksDomain.Tables(
         TaskTable,
         UserTable
     )
 
-    return TasksDomain(tables) {
-        // todo
-    }
+    return TasksDomain(tables, kafkaUrl)
 }
 

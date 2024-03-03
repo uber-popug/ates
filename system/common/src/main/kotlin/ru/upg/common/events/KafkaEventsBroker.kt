@@ -1,18 +1,24 @@
 package ru.upg.common.events
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerRecord
+import org.slf4j.LoggerFactory
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.reflect.KClass
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.toJavaDuration
 
 class KafkaEventsBroker(
-    private val url: String,
-    private val consumerGroup: String,
-    private val card: Map<Event, Topic>,
-    private val notFoundTopic: Topic,
-    private val mapper: ObjectMapper
+    val url: String,
+    val notFoundTopic: Topic,
+    val card: Map<KClass<out Event>, Topic>
 ) : EventsBroker {
+
+    private val mapper = jacksonObjectMapper()
 
     private val producerProps = mapOf(
         "bootstrap.servers" to url,
@@ -25,7 +31,7 @@ class KafkaEventsBroker(
 
 
     override fun publish(event: Event) {
-        val topic = card[event] ?: notFoundTopic
+        val topic = card[event::class] ?: notFoundTopic
         val record = makeRecord(topic, event)
         producer.send(record).get()
     }
@@ -37,21 +43,67 @@ class KafkaEventsBroker(
     }
 
 
-    private val consumerProps = mapOf(
-        "bootstrap.servers" to url,
-        "auto.offset.reset" to "earliest",
-        "key.deserializer" to "org.apache.kafka.common.serialization.StringDeserializer",
-        "value.deserializer" to "org.apache.kafka.common.serialization.ByteArrayDeserializer",
-        "group.id" to consumerGroup,
-        "security.protocol" to "PLAINTEXT"
-    )
+    override fun listen(consumerGroup: String): Listener {
+        return Listener(url, consumerGroup, mapper)
+    }
 
-    private val consumer = KafkaConsumer<String, ByteArray>(consumerProps)
 
-    private val listeningTopics = ConcurrentHashMap<Topic, (Event) -> Unit>()
+    class Listener(
+        kafkaUrl: String,
+        private val consumerGroup: String,
+        private val mapper: ObjectMapper
+    ) : EventsBroker.Listener, Runnable {
 
-    override fun listen(topic: Topic, handler: (Event) -> Unit) {
-        listeningTopics[topic] = handler
-        consumer.subscribe(listeningTopics.map(Topic::value))
+        data class EventHandler(
+            val kClass: KClass<*>,
+            val handler: (Any) -> Unit
+        )
+
+        private val log = LoggerFactory.getLogger(javaClass)
+
+        private val consumerProps = mapOf(
+            "bootstrap.servers" to kafkaUrl,
+            "auto.offset.reset" to "earliest",
+            "key.deserializer" to "org.apache.kafka.common.serialization.StringDeserializer",
+            "value.deserializer" to "org.apache.kafka.common.serialization.ByteArrayDeserializer",
+            "group.id" to consumerGroup,
+            "security.protocol" to "PLAINTEXT"
+        )
+
+        private val consumer = KafkaConsumer<String, ByteArray>(consumerProps)
+        private val handlers = mutableMapOf<String, EventHandler>()
+
+        override fun <E : Event> register(
+            topic: Topic,
+            kclass: KClass<E>,
+            handler: (E) -> Unit
+        ) {
+            val targetHandler: (Any) -> Unit = { event: Any ->
+                handler(event as E)
+            }
+
+            handlers[topic.value] = EventHandler(kclass, targetHandler)
+        }
+
+
+        override fun start() {
+            Thread(this, consumerGroup).start()
+        }
+
+        override fun run() {
+            // todo configure
+            val pollTime = 500.milliseconds.toJavaDuration()
+
+            while (true) {
+                log.info("start polling events $consumerGroup")
+                consumer.poll(pollTime).forEach { record: ConsumerRecord<String, ByteArray> ->
+                    val topic: String = record.topic()
+                    handlers[topic]?.let { (kclass, handler) ->
+                        val event = mapper.readValue(record.value(), kclass.java)
+                        handler(event)
+                    }
+                }
+            }
+        }
     }
 }

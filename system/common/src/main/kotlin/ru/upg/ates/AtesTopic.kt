@@ -2,8 +2,7 @@ package ru.upg.ates
 
 import ru.upg.ates.event.TaskBE
 import ru.upg.ates.event.TaskCUD
-import ru.upg.ates.event.UserCUD
-import kotlin.reflect.KClass
+import ru.upg.common.events.Topic
 
 /**
  * Naming based on pattern
@@ -13,12 +12,14 @@ import kotlin.reflect.KClass
  * - possible domains [auth, tasks]
  * - classification: [cdc - Change Data Capture, res - result of command execution]
  */
-sealed class AtesTopic<T : Any>(val value: String, val event: KClass<T>) {
+enum class AtesTopic(override val value: String) : Topic {
+    NOT_FOUND("not-found"),
+
     // topics with CUD events
-    data object Users : AtesTopic<UserCUD>("auth.cdc.user", UserCUD::class)
-    data object Tasks : AtesTopic<TaskCUD>("tasks.cdc.task", TaskCUD::class)
+    USERS("auth.cdc.user"),
+    TASKS("tasks.cdc.task"),
 
     // topics with BE events
-    data object TaskAssigned: AtesTopic<TaskBE.Assigned>("tasks.res.assigned", TaskBE.Assigned::class)
-    data object TaskFinished: AtesTopic<TaskBE.Finished>("tasks.res.finished", TaskBE.Finished::class)
+    TASK_ASSIGNED("tasks.res.assigned"),
+    TASK_FINISHED("tasks.res.finished")
 }

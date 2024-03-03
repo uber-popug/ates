@@ -2,6 +2,7 @@ package ru.upg.ates.event
 
 import ru.upg.ates.AtesEvent
 import ru.upg.ates.CUDEvent
+import ru.upg.common.cqrs.IAggregate
 import java.util.UUID
 
 
@@ -11,16 +12,14 @@ enum class Role(val label: String) {
     WORKER("Работник"),
 }
 
-data class User(
-    val id: Long,
+data class UserChange(
     val pid: UUID,
     val username: String,
     val role: Role
 )
 
 
-interface UserCUD : AtesEvent, CUDEvent {
-    data class Created(val user: User) : UserCUD
-    data class Updated(val user: User) : UserCUD
+interface UserCUD : AtesEvent, CUDEvent, IAggregate {
+    data class Created(val user: UserChange) : UserCUD
+    data class Updated(val user: UserChange) : UserCUD
 }
-
