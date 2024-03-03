@@ -1,8 +1,10 @@
 package ru.upg.cqrs
 
+import ru.upg.ates.AtesKafka
+
 
 interface Domain<D : Domain<D>> {
-    val eventsListener: (Event) -> Unit
+    val kafka: AtesKafka
 }
 
 

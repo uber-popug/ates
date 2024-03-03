@@ -1,13 +1,12 @@
 package ru.upg.ates
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerRecord
-import ru.upg.cqrs.ChangeTarget
 import ru.upg.cqrs.Event
-import ru.upg.ates.event.KafkaEventProcessed
 
-class AtesKafka(url: String) : ChangeTarget<KafkaChange<*>> {
+class AtesKafka(val mapper: ObjectMapper, url: String): EventsListener {
 
     private val producer = KafkaProducer<String, ByteArray>(
         mapOf(
@@ -18,17 +17,13 @@ class AtesKafka(url: String) : ChangeTarget<KafkaChange<*>> {
         )
     )
 
-    private val mapper = jacksonObjectMapper()
-
-
-    override fun invoke(change: KafkaChange<*>): Event {
-        return KafkaEventProcessed(change, kotlin.runCatching {
+    override fun onEvent(event: Event) {
             val content = mapper.writeValueAsBytes(change.event)
 
             val recordId = System.currentTimeMillis().toString()
             val record = ProducerRecord(change.topic.value, recordId, content)
 
             producer.send(record).get()
-        })
+        }
     }
 }

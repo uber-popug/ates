@@ -19,6 +19,6 @@ sealed class AtesTopic<T : Any>(val value: String, val event: KClass<T>) {
     data object Tasks : AtesTopic<TaskCUD>("tasks.cdc.task", TaskCUD::class)
 
     // topics with BE events
-    data object  TaskAssigned: AtesTopic<TaskBE.Assigned>("tasks.res.assigned", TaskBE.Assigned::class)
-    data object  TaskFinished: AtesTopic<TaskBE.Finished>("tasks.res.finished", TaskBE.Finished::class)
+    data object TaskAssigned: AtesTopic<TaskBE.Assigned>("tasks.res.assigned", TaskBE.Assigned::class)
+    data object TaskFinished: AtesTopic<TaskBE.Finished>("tasks.res.finished", TaskBE.Finished::class)
 }
