@@ -4,8 +4,8 @@ import org.junit.jupiter.api.Test
 import ru.upg.ates.auth.operation.RegisterUser
 import ru.upg.ates.auth.table.UserTable
 import ru.upg.ates.events.Role
+import ru.upg.ates.execute
 import ru.upg.ates.model.DomainConfig
-import ru.upg.ates.ddd.execute
 
 class RegisterUserTest {
 
@@ -27,11 +27,9 @@ class RegisterUserTest {
 
         domain.execute(
             RegisterUser(
-                RegisterUser.Aggregate(
-                    role = Role.WORKER,
-                    username = "Worker ${System.currentTimeMillis()}",
-                    password = "123456"
-                )
+                role = Role.WORKER,
+                username = "Worker ${System.currentTimeMillis()}",
+                password = "123456"
             )
         )
     }

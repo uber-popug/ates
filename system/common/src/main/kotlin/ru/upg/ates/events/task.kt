@@ -1,9 +1,8 @@
 package ru.upg.ates.events
 
-import ru.upg.ates.AtesEvent
 import ru.upg.ates.BusinessEvent
 import ru.upg.ates.CUDEvent
-import java.util.UUID
+import java.util.*
 
 data class TaskChange(
     val pid: UUID,
@@ -13,12 +12,12 @@ data class TaskChange(
     val finished: Boolean
 )
 
-interface TaskCUD : AtesEvent, CUDEvent {
+sealed interface TaskCUD : CUDEvent {
     data class Created(val task: TaskChange) : TaskCUD
     data class Updated(val task: TaskChange) : TaskCUD
 }
 
-interface TaskBE : AtesEvent, BusinessEvent {
+interface TaskBE : BusinessEvent {
     data class Assigned(val taskPid: UUID, val userPid: UUID) : TaskBE
     data class Finished(val taskPid: UUID) : TaskBE
 }

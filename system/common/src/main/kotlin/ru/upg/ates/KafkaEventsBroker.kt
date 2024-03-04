@@ -46,7 +46,6 @@ class KafkaEventsBroker(
         return KafkaListener.KafkaListenerBuilder(url, consumerGroup)
     }
 
-
     data class EventHandler(
         val kClass: KClass<*>,
         val handler: (Any) -> Unit

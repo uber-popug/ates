@@ -9,9 +9,12 @@ open class AtesTable(name: String) : LongIdTable(name) {
     val pid = uuid("pid").uniqueIndex()
 }
 
-fun <T : AtesTable, E> T.getById(id: Long, cnstr: (T, ResultRow) -> E): E? {
+fun <T : AtesTable, E> T.getById(
+    entityId: Long,
+    entityConstructor: (T, ResultRow) -> E
+): E? {
     return this.selectAll()
-        .andWhere { this@getById.id eq id }
+        .andWhere { id eq entityId }
         .firstOrNull()
-        ?.let { cnstr(this@getById, it) }
+        ?.let { entityConstructor(this, it) }
 }

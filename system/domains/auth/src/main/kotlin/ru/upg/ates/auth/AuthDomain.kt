@@ -13,7 +13,7 @@ import ru.upg.ates.KafkaEventsBroker
 class AuthDomain(
     val tables: Tables,
     val config: DomainConfig
-) : Domain<AuthDomain> {
+) : Domain {
 
     // event broker settings
 

@@ -23,7 +23,7 @@ class GetRandomWorkersQuery(
 
         return mutableListOf<EntityId>().also { users ->
             repeat(amount) {
-                val randomWorker = allWorkers.indices.random()
+                val randomWorker = (0..<allWorkers.count()).random()
                 users.add(allWorkers[randomWorker])
             }
         }

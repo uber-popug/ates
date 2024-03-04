@@ -7,5 +7,5 @@ object TaskTable : AtesTable("task") {
     val userId = long("user_id").references(UserTable.id)
     val name = text("name")
     val price = integer("price")
-    val finished = bool("finished")
+    val finished = bool("finished").default(false)
 }

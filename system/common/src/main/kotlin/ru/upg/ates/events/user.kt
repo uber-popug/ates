@@ -1,8 +1,7 @@
 package ru.upg.ates.events
 
-import ru.upg.ates.AtesEvent
 import ru.upg.ates.CUDEvent
-import java.util.UUID
+import java.util.*
 
 
 enum class Role(val label: String) {
@@ -17,8 +16,7 @@ data class UserChange(
     val username: String,
 )
 
-
-interface UserCUD : AtesEvent, CUDEvent {
+sealed interface UserCUD : CUDEvent {
     data class Created(val user: UserChange) : UserCUD
     data class Updated(val user: UserChange) : UserCUD
 }
