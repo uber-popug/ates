@@ -1,11 +1,11 @@
-package ru.upg.ates.tasks.commands
+package ru.upg.ates.tasks.command
 
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.transactions.transaction
 import ru.upg.ates.event.TaskCUD
 import ru.upg.ates.event.TaskChange
 import ru.upg.ates.tasks.TasksDomain
-import ru.upg.ates.tasks.queries.GetRandomWorkers
+import ru.upg.ates.tasks.query.GetRandomWorkers
 import ru.upg.ates.tasks.table.TaskTable
 import ru.upg.common.cqrs.Command
 import ru.upg.common.events.Event

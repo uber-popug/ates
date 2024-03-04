@@ -1,4 +1,4 @@
-package ru.upg.ates.tasks.commands
+package ru.upg.ates.tasks.command
 
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.transactions.transaction

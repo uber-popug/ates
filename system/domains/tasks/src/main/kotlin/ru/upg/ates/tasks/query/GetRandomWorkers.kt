@@ -1,4 +1,4 @@
-package ru.upg.ates.tasks.queries
+package ru.upg.ates.tasks.query
 
 import org.jetbrains.exposed.sql.andWhere
 import org.jetbrains.exposed.sql.selectAll

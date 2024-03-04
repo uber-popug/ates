@@ -6,7 +6,7 @@ import org.http4k.routing.bind
 import org.http4k.routing.routes
 import org.http4k.server.Undertow
 import org.http4k.server.asServer
-import ru.upg.ates.rest.handlers.CreateTaskHandler
+import ru.upg.ates.rest.handler.CreateTaskHandler
 import ru.upg.ates.tasks.TasksDomain
 import ru.upg.ates.tasks.table.TaskTable
 import ru.upg.ates.tasks.table.UserTable

@@ -1,4 +1,4 @@
-package ru.upg.ates.rest.handlers
+package ru.upg.ates.rest.handler
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
@@ -8,7 +8,7 @@ import org.http4k.core.Response
 import org.http4k.core.Status
 import ru.upg.ates.tasks.TasksDomain
 import ru.upg.ates.tasks.model.Task
-import ru.upg.ates.tasks.commands.CreateTaskCommand
+import ru.upg.ates.tasks.command.CreateTaskCommand
 import ru.upg.common.ddd.execute
 
 
