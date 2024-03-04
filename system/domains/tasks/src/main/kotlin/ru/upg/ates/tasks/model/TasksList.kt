@@ -1,6 +1,6 @@
 package ru.upg.ates.tasks.model
 
-import ru.upg.common.cqrs.ReadModel
+import ru.upg.ates.common.cqrs.ReadModel
 
 class TasksList(
     val tasks: List<Task>,

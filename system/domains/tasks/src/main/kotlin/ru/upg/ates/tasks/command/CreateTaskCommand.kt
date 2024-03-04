@@ -2,16 +2,17 @@ package ru.upg.ates.tasks.command
 
 import org.jetbrains.exposed.sql.insertAndGetId
 import org.jetbrains.exposed.sql.transactions.transaction
+import ru.upg.ates.event.TaskBE
 import ru.upg.ates.event.TaskCUD
 import ru.upg.ates.event.TaskChange
 import ru.upg.ates.tasks.TasksDomain
 import ru.upg.ates.tasks.model.Task
-import ru.upg.ates.tasks.query.GetRandomWorkers
+import ru.upg.ates.tasks.query.GetRandomWorkersQuery
 import ru.upg.ates.tasks.table.TaskTable
-import ru.upg.common.cqrs.Command
-import ru.upg.common.cqrs.IAggregate
-import ru.upg.common.ddd.fetch
-import ru.upg.common.events.Event
+import ru.upg.ates.common.cqrs.Command
+import ru.upg.ates.common.cqrs.IAggregate
+import ru.upg.ates.common.ddd.fetch
+import ru.upg.ates.common.events.Event
 import java.util.*
 
 class CreateTaskCommand(
@@ -22,7 +23,7 @@ class CreateTaskCommand(
 
 
     override fun execute(domain: TasksDomain): Pair<Task, List<Event>> {
-        val query = GetRandomWorkers(1)
+        val query = GetRandomWorkersQuery(1)
 
         val workerId = domain.fetch(query).ids.firstOrNull()
             ?: throw IllegalStateException("Не найдено ни одного рабочего")
@@ -45,7 +46,10 @@ class CreateTaskCommand(
             }
         }
 
-        return Task(id.value, change) to listOf(TaskCUD.Created(change))
+        return Task(id.value, change) to listOf(
+            TaskCUD.Created(change),
+            TaskBE.Assigned(change.pid, change.userPid)
+        )
     }
 
 

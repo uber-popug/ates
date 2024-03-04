@@ -1,4 +1,4 @@
-package ru.upg.common.events
+package ru.upg.ates.common.events
 
 import kotlin.reflect.KClass
 

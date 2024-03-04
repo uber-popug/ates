@@ -7,10 +7,10 @@ import org.slf4j.LoggerFactory
 import ru.upg.ates.event.UserChange
 import ru.upg.ates.event.UserCUD
 import ru.upg.ates.tasks.TasksDomain
-import ru.upg.common.cqrs.Command
-import ru.upg.common.events.Event
+import ru.upg.ates.common.cqrs.Command
+import ru.upg.ates.common.events.Event
 
-class SaveUser(
+class SaveUserCommand(
     override val aggregate: UserCUD
 ) : Command<TasksDomain, UserCUD, Unit>() {
 

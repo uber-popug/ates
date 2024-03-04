@@ -1,10 +1,10 @@
-package ru.upg.common.ddd
+package ru.upg.ates.common.ddd
 
-import ru.upg.common.cqrs.Command
-import ru.upg.common.cqrs.IAggregate
-import ru.upg.common.cqrs.Query
-import ru.upg.common.cqrs.ReadModel
-import ru.upg.common.events.Event
+import ru.upg.ates.common.cqrs.Command
+import ru.upg.ates.common.cqrs.IAggregate
+import ru.upg.ates.common.cqrs.Query
+import ru.upg.ates.common.cqrs.ReadModel
+import ru.upg.ates.common.events.Event
 
 fun <D : Domain<D>, R> D.execute(command: Command<D, *, R>): R {
     val (result, events) = command.execute(this)

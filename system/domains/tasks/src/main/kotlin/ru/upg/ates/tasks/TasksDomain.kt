@@ -8,12 +8,12 @@ import ru.upg.ates.event.TaskBE
 import ru.upg.ates.event.TaskCUD
 import ru.upg.ates.event.UserCUD
 import ru.upg.ates.model.DomainConfig
-import ru.upg.ates.tasks.command.SaveUser
+import ru.upg.ates.tasks.command.SaveUserCommand
 import ru.upg.ates.tasks.table.TaskTable
 import ru.upg.ates.tasks.table.UserTable
-import ru.upg.common.ddd.Domain
-import ru.upg.common.ddd.handler
-import ru.upg.common.events.KafkaEventsBroker
+import ru.upg.ates.common.ddd.Domain
+import ru.upg.ates.common.ddd.handler
+import ru.upg.ates.common.events.KafkaEventsBroker
 
 class TasksDomain(
     val tables: Tables,
@@ -34,7 +34,7 @@ class TasksDomain(
     )
 
     private val listener = broker.listen("ates-tasks").apply {
-        register(AtesTopic.USERS, UserCUD::class, handler(::SaveUser))
+        register(AtesTopic.USERS, UserCUD::class, handler(::SaveUserCommand))
         start()
     }
 

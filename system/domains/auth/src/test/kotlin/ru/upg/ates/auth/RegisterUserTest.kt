@@ -1,14 +1,11 @@
 package ru.upg.ates.auth
 
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.SchemaUtils
-import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.jupiter.api.Test
 import ru.upg.ates.auth.operation.RegisterUser
 import ru.upg.ates.auth.table.UserTable
 import ru.upg.ates.event.Role
 import ru.upg.ates.model.DomainConfig
-import ru.upg.common.ddd.execute
+import ru.upg.ates.common.ddd.execute
 
 class RegisterUserTest {
 

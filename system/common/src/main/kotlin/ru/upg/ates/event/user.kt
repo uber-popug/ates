@@ -2,7 +2,7 @@ package ru.upg.ates.event
 
 import ru.upg.ates.AtesEvent
 import ru.upg.ates.CUDEvent
-import ru.upg.common.cqrs.IAggregate
+import ru.upg.ates.common.cqrs.IAggregate
 import java.util.UUID
 
 

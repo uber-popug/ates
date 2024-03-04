@@ -1,7 +1,7 @@
 package ru.upg.ates
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo
-import ru.upg.common.events.Event
+import ru.upg.ates.common.events.Event
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY)
 interface AtesEvent : Event

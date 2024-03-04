@@ -9,7 +9,7 @@ import org.http4k.core.Status
 import org.http4k.core.queries
 import ru.upg.ates.tasks.TasksDomain
 import ru.upg.ates.tasks.query.ListTasksQuery
-import ru.upg.common.ddd.fetch
+import ru.upg.ates.common.ddd.fetch
 import java.util.UUID
 
 class ListTasksHandler(

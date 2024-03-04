@@ -3,7 +3,7 @@ package ru.upg.ates.tasks.model
 import org.jetbrains.exposed.sql.ResultRow
 import ru.upg.ates.event.TaskChange
 import ru.upg.ates.tasks.table.TaskTable
-import ru.upg.common.cqrs.ReadModel
+import ru.upg.ates.common.cqrs.ReadModel
 import java.util.*
 
 data class Task(
@@ -31,5 +31,14 @@ data class Task(
         name = change.name,
         price = change.price,
         finished = change.finished
+    )
+
+
+    fun toChange() = TaskChange(
+        pid = pid,
+        userPid = userPid,
+        name = name,
+        price = price,
+        finished = finished
     )
 }

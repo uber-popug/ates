@@ -3,7 +3,6 @@ package ru.upg.ates.event
 import ru.upg.ates.AtesEvent
 import ru.upg.ates.BusinessEvent
 import ru.upg.ates.CUDEvent
-import java.math.BigDecimal
 import java.util.UUID
 
 data class TaskChange(
@@ -20,6 +19,6 @@ interface TaskCUD : AtesEvent, CUDEvent {
 }
 
 interface TaskBE : AtesEvent, BusinessEvent {
-    data class Assigned(val taskId: UUID, val userId: UUID) : TaskBE
-    data class Finished(val taskId: UUID) : TaskBE
+    data class Assigned(val taskPid: UUID, val userPid: UUID) : TaskBE
+    data class Finished(val taskPid: UUID) : TaskBE
 }

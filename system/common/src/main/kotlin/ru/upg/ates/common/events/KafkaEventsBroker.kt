@@ -1,4 +1,4 @@
-package ru.upg.common.events
+package ru.upg.ates.common.events
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper

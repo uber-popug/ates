@@ -9,7 +9,7 @@ import org.http4k.core.Status
 import ru.upg.ates.tasks.TasksDomain
 import ru.upg.ates.tasks.model.Task
 import ru.upg.ates.tasks.command.CreateTaskCommand
-import ru.upg.common.ddd.execute
+import ru.upg.ates.common.ddd.execute
 
 
 class CreateTaskHandler(

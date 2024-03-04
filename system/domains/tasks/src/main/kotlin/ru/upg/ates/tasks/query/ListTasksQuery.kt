@@ -7,7 +7,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import ru.upg.ates.tasks.TasksDomain
 import ru.upg.ates.tasks.model.Task
 import ru.upg.ates.tasks.model.TasksList
-import ru.upg.common.cqrs.Query
+import ru.upg.ates.common.cqrs.Query
 import java.util.UUID
 
 class ListTasksQuery(

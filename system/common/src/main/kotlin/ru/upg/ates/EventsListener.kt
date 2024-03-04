@@ -1,6 +1,6 @@
 package ru.upg.ates
 
-import ru.upg.common.events.Event
+import ru.upg.ates.common.events.Event
 
 fun interface EventsListener : (Event) -> Unit {
     fun onEvent(event: Event)

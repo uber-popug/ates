@@ -7,8 +7,8 @@ import ru.upg.ates.AtesTopic
 import ru.upg.ates.auth.table.UserTable
 import ru.upg.ates.event.UserCUD
 import ru.upg.ates.model.DomainConfig
-import ru.upg.common.ddd.Domain
-import ru.upg.common.events.KafkaEventsBroker
+import ru.upg.ates.common.ddd.Domain
+import ru.upg.ates.common.events.KafkaEventsBroker
 
 class AuthDomain(
     val tables: Tables,

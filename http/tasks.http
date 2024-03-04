@@ -19,3 +19,8 @@ POST {{tasksHost}}/tasks
 Content-Type: application/json
 
 {"name": "Test task {{$random.uuid}}"}
+
+
+### reassing all tasks
+POST {{tasksHost}}/tasks/reassign
+Content-Type: application/json

@@ -1,6 +1,6 @@
-package ru.upg.common.cqrs
+package ru.upg.ates.common.cqrs
 
-import ru.upg.common.ddd.Domain
+import ru.upg.ates.common.ddd.Domain
 
 interface ReadModel
 

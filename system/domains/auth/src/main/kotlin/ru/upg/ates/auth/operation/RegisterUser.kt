@@ -7,9 +7,9 @@ import ru.upg.ates.auth.model.User
 import ru.upg.ates.event.Role
 import ru.upg.ates.event.UserCUD
 import ru.upg.ates.event.UserChange
-import ru.upg.common.cqrs.Command
-import ru.upg.common.cqrs.IAggregate
-import ru.upg.common.events.Event
+import ru.upg.ates.common.cqrs.Command
+import ru.upg.ates.common.cqrs.IAggregate
+import ru.upg.ates.common.events.Event
 import java.util.*
 
 class RegisterUser(

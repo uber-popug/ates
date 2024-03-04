@@ -11,6 +11,7 @@ import org.http4k.server.asServer
 import ru.upg.ates.model.DomainConfig
 import ru.upg.ates.rest.handler.CreateTaskHandler
 import ru.upg.ates.rest.handler.ListTasksHandler
+import ru.upg.ates.rest.handler.ReassignAllTasksHandler
 import ru.upg.ates.tasks.TasksDomain
 import ru.upg.ates.tasks.table.TaskTable
 import ru.upg.ates.tasks.table.UserTable
@@ -22,17 +23,17 @@ val tasksServiceApp = { domain: TasksDomain ->
     // setting Tasks service REST API
     //  1) list tasks           GET  /tasks?showFinished&search&user&page&sort
     //  2) creating task        POST /tasks
-    //  3) update task          PUT  /tasks
-    //  4) reassign all tasks   POST /tasks/reassign
+    //  3) reassign all tasks   POST /tasks/reassign
+    //  4) update task          PUT  /tasks/{id}
     //  5) finish task          POST /tasks/{id}/finish
     routes(
         "/ping" bind Method.GET to { Response(Status.OK).body("pong") },
         "/tasks" bind routes(
             Method.GET bind ListTasksHandler(mapper, domain),
             Method.POST bind CreateTaskHandler(mapper, domain),
-//                handlers.updateTask,
-//                "/reassign" bind handlers.reassignTasks,
+            "/reassign" bind Method.POST to ReassignAllTasksHandler(mapper, domain),
 //                "/{id}" bind routes(
+//                     handlers.updateTask,
 //                    "/finish" bind handlers.finishTask,
 //                )
         )

@@ -6,13 +6,13 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import ru.upg.ates.event.Role
 import ru.upg.ates.tasks.TasksDomain
 import ru.upg.ates.tasks.table.UserTable
-import ru.upg.common.cqrs.Query
-import ru.upg.common.cqrs.ReadModel
+import ru.upg.ates.common.cqrs.Query
+import ru.upg.ates.common.cqrs.ReadModel
 import java.util.UUID
 
-class GetRandomWorkers(
+class GetRandomWorkersQuery(
     private val amount: Int
-) : Query<TasksDomain, GetRandomWorkers.WorkerIds>() {
+) : Query<TasksDomain, GetRandomWorkersQuery.WorkerIds>() {
 
     @JvmInline
     value class WorkerIds(val ids: List<UUID>) : ReadModel

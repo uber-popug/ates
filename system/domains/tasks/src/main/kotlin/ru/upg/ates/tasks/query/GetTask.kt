@@ -5,7 +5,7 @@ import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import ru.upg.ates.tasks.TasksDomain
 import ru.upg.ates.tasks.model.Task
-import ru.upg.common.cqrs.Query
+import ru.upg.ates.common.cqrs.Query
 
 class GetTask(private val id: Long) : Query<TasksDomain, Task>() {
     override fun execute(domain: TasksDomain): Task {
