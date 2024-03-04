@@ -7,6 +7,7 @@ import ru.upg.ates.AtesTopic
 import ru.upg.ates.event.TaskBE
 import ru.upg.ates.event.TaskCUD
 import ru.upg.ates.event.UserCUD
+import ru.upg.ates.model.DomainConfig
 import ru.upg.ates.tasks.command.SaveUser
 import ru.upg.ates.tasks.table.TaskTable
 import ru.upg.ates.tasks.table.UserTable
@@ -16,20 +17,8 @@ import ru.upg.common.events.KafkaEventsBroker
 
 class TasksDomain(
     val tables: Tables,
-    val config: Config,
+    val config: DomainConfig,
 ) : Domain<TasksDomain> {
-
-    data class Config(
-        val kafkaUrl: String,
-        val db: Db
-    ) {
-        data class Db(
-            val url: String,
-            val username: String,
-            val password: String
-        )
-    }
-
 
     // event broker configuration
 

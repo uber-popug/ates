@@ -10,7 +10,6 @@ import ru.upg.ates.tasks.query.GetRandomWorkers
 import ru.upg.ates.tasks.table.TaskTable
 import ru.upg.common.cqrs.Command
 import ru.upg.common.cqrs.IAggregate
-import ru.upg.common.ddd.execute
 import ru.upg.common.ddd.fetch
 import ru.upg.common.events.Event
 import java.util.*
@@ -39,6 +38,7 @@ class CreateTaskCommand(
         val id = transaction {
             TaskTable.insertAndGetId {
                 it[pid] = change.pid
+                it[userPid] = change.userPid
                 it[name] = change.name
                 it[price] = change.price
                 it[finished] = change.finished

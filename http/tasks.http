@@ -1,0 +1,21 @@
+### ping
+GET {{tasksHost}}/ping
+
+
+### list first page of tasks
+GET {{tasksHost}}/tasks
+### limit page tasks
+GET {{tasksHost}}/tasks?pageSize=1
+### search tasks
+GET {{tasksHost}}/tasks?search=c6f
+### not show finished
+GET {{tasksHost}}/tasks?showFinished=false
+### show by user
+GET {{tasksHost}}/tasks?user=c64c70d8-e85a-44b5-b230-54ba3346574d
+
+
+### create test task
+POST {{tasksHost}}/tasks
+Content-Type: application/json
+
+{"name": "Test task {{$random.uuid}}"}

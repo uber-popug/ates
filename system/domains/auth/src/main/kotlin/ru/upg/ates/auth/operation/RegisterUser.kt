@@ -1,6 +1,5 @@
 package ru.upg.ates.auth.operation
 
-import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.insertAndGetId
 import org.jetbrains.exposed.sql.transactions.transaction
 import ru.upg.ates.auth.AuthDomain
@@ -31,7 +30,7 @@ class RegisterUser(
         )
 
         val id = transaction {
-            domain.tables.userTable.let { table ->
+            domain.tables.users.let { table ->
                 table.insertAndGetId {
                     it[pid] = change.pid
                     it[role] = aggregate.role

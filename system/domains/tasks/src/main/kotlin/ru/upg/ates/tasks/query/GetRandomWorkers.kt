@@ -27,7 +27,7 @@ class GetRandomWorkers(
 
         val ids = mutableListOf<UUID>().also { users ->
             repeat(amount) {
-                val randomWorker = (0..workers.size).random()
+                val randomWorker = workers.indices.random()
                 users.add(workers[randomWorker])
             }
         }
