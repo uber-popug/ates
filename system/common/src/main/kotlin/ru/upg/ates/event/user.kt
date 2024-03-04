@@ -14,8 +14,8 @@ enum class Role(val label: String) {
 
 data class UserChange(
     val pid: UUID,
+    val role: Role,
     val username: String,
-    val role: Role
 )
 
 

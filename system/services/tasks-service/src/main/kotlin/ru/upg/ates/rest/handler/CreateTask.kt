@@ -26,10 +26,15 @@ class CreateTaskHandler(
     )
 
     override fun invoke(request: Request): Response {
-        val payload = mapper.readValue<RequestPayload>(request.bodyString())
+        val requestContent = request.bodyString()
+        val payload = mapper.readValue<RequestPayload>(requestContent)
+
         val aggregate = CreateTaskCommand.Aggregate(payload.name)
         val command = CreateTaskCommand(aggregate)
-        domain.execute(command)
-        return Response(Status.OK)
+        val result = domain.execute(command)
+
+        val responsePayload = ResponsePayload(result)
+        val responseContent = mapper.writeValueAsString(responsePayload)
+        return Response(Status.OK).body(responseContent)
     }
 }

@@ -7,7 +7,7 @@ class ListenEvents(
     private val consumerGroup: String
 ) {
 
-    fun <T : Any> listen(topic: AtesTopic<T>, handler: (T) -> Unit): ListenEvents {
+    fun <T : Any> listen(topic: AtesTopic, handler: (T) -> Unit): ListenEvents {
         // TODO()
         return this
     }
