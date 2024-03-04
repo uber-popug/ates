@@ -12,11 +12,11 @@ import ru.upg.common.events.Event
 
 class SaveUser(
     override val aggregate: UserCUD
-) : Command<TasksDomain, UserCUD>() {
+) : Command<TasksDomain, UserCUD, Unit>() {
 
     private val log = LoggerFactory.getLogger(javaClass)
 
-    override fun execute(domain: TasksDomain): List<Event> {
+    override fun execute(domain: TasksDomain): Pair<Unit, List<Event>> {
         when (aggregate) {
             is UserCUD.Created -> create(domain, aggregate.user)
             is UserCUD.Updated -> update(domain, aggregate.user)
@@ -25,7 +25,7 @@ class SaveUser(
             }
         }
 
-        return listOf()
+        return Unit to listOf()
     }
 
     private fun create(domain: TasksDomain, user: UserChange) {

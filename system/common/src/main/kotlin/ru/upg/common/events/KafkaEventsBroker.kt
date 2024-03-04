@@ -83,6 +83,8 @@ class KafkaEventsBroker(
             }
 
             handlers[topic.value] = EventHandler(kclass, targetHandler)
+
+            consumer.subscribe(handlers.keys)
         }
 
 

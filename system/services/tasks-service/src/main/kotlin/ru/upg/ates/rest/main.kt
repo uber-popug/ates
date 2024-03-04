@@ -11,14 +11,8 @@ import ru.upg.ates.tasks.TasksDomain
 import ru.upg.ates.tasks.table.TaskTable
 import ru.upg.ates.tasks.table.UserTable
 
-fun main() {
-    // todo move to config
-    // setting listener to track user changes
-    val kafkaServer = "http://localhost:9094"
-    /*ListenEvents(kafkaServer, consumerGroup)
-        .listen(AtesTopic.Users, SaveUserChange(UsersDao())::save)*/
 
-    val domain = buildDomain(kafkaServer)
+val tasksServiceApp = { domain: TasksDomain ->
     val mapper = jacksonObjectMapper()
 
     // setting Tasks service REST API
@@ -37,15 +31,30 @@ fun main() {
 //                    "/finish" bind handlers.finishTask,
 //                )
         )
-    ).asServer(Undertow(8801)).start()
+    )
 }
 
-private fun buildDomain(kafkaUrl: String): TasksDomain {
+fun main() {
+    val domain = buildDomain()
+
+    tasksServiceApp(domain)
+        .asServer(Undertow(8801))
+        .start()
+}
+
+private fun buildDomain(): TasksDomain {
     val tables = TasksDomain.Tables(
         TaskTable,
         UserTable
     )
 
-    return TasksDomain(tables, kafkaUrl)
+    return TasksDomain(tables, TasksDomain.Config(
+        kafkaUrl = "http://localhost:9994",
+        db = TasksDomain.Config.Db(
+            url = "jdbc:postgresql://localhost:5432/ates_tasks",
+            username = "postgres",
+            password = "postgres"
+        )
+    ))
 }
 

@@ -1,5 +1,8 @@
 package ru.upg.ates.tasks
 
+import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.transactions.transaction
 import ru.upg.ates.AtesTopic
 import ru.upg.ates.event.TaskBE
 import ru.upg.ates.event.TaskCUD
@@ -13,19 +16,29 @@ import ru.upg.common.events.KafkaEventsBroker
 
 class TasksDomain(
     val tables: Tables,
-    kafkaUrl: String,
+    val config: Config,
 ) : Domain<TasksDomain> {
 
-    class Tables(
-        val tasks: TaskTable,
-        val users: UserTable
-    )
+    data class Config(
+        val kafkaUrl: String,
+        val db: Db
+    ) {
+        data class Db(
+            val url: String,
+            val username: String,
+            val password: String
+        )
+    }
+
+
+    // event broker configuration
 
     override val broker = KafkaEventsBroker(
-        url = kafkaUrl,
+        url = config.kafkaUrl,
         notFoundTopic = AtesTopic.NOT_FOUND,
         card = mapOf(
-            TaskCUD::class to AtesTopic.TASKS,
+            TaskCUD.Created::class to AtesTopic.TASKS,
+            TaskCUD.Updated::class to AtesTopic.TASKS,
             TaskBE.Assigned::class to AtesTopic.TASK_ASSIGNED,
             TaskBE.Finished::class to AtesTopic.TASK_FINISHED
         )
@@ -34,5 +47,28 @@ class TasksDomain(
     private val listener = broker.listen("ates-tasks").apply {
         register(AtesTopic.USERS, UserCUD::class, handler(::SaveUser))
         start()
+    }
+
+
+    // persistence configuration
+
+    class Tables(
+        val tasks: TaskTable,
+        val users: UserTable
+    )
+
+    private val database = config.db.run {
+        Database.connect(
+            url = url,
+            user = username,
+            password = password
+        )
+
+        transaction {
+            SchemaUtils.createMissingTablesAndColumns(
+                tables.users,
+                tables.tasks,
+            )
+        }
     }
 }

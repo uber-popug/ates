@@ -17,11 +17,11 @@ class CreateTaskHandler(
     private val domain: TasksDomain
 ): HttpHandler {
 
-    private data class RequestPayload(
+    data class RequestPayload(
         val name: String
     )
 
-    private data class ResponsePayload(
+    data class ResponsePayload(
         val task: Task
     )
 
