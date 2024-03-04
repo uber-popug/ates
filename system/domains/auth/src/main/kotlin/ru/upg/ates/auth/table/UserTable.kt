@@ -1,7 +1,7 @@
 package ru.upg.ates.auth.table
 
 import org.jetbrains.exposed.dao.id.LongIdTable
-import ru.upg.ates.event.Role
+import ru.upg.ates.events.Role
 
 object UserTable : LongIdTable("user") {
     val pid = uuid("pid")

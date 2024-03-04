@@ -5,10 +5,10 @@ import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 import ru.upg.ates.AtesTopic
 import ru.upg.ates.auth.table.UserTable
-import ru.upg.ates.event.UserCUD
+import ru.upg.ates.events.UserCUD
 import ru.upg.ates.model.DomainConfig
-import ru.upg.ates.common.ddd.Domain
-import ru.upg.ates.common.events.KafkaEventsBroker
+import ru.upg.ates.Domain
+import ru.upg.ates.KafkaEventsBroker
 
 class AuthDomain(
     val tables: Tables,

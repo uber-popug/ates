@@ -1,4 +1,4 @@
-package ru.upg.ates.event
+package ru.upg.ates.events
 
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.clients.producer.KafkaProducer

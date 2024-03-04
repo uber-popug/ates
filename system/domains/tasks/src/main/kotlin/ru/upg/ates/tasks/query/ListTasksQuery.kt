@@ -4,39 +4,39 @@ import org.jetbrains.exposed.sql.andWhere
 import org.jetbrains.exposed.sql.lowerCase
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
+import ru.upg.ates.Query
 import ru.upg.ates.tasks.TasksDomain
 import ru.upg.ates.tasks.model.Task
 import ru.upg.ates.tasks.model.TasksList
-import ru.upg.ates.common.cqrs.Query
-import java.util.UUID
+import java.util.*
 
 class ListTasksQuery(
     private val showFinished: Boolean = false,
     private val search: String?,
-    private val userPid: UUID?,
+    private val userId: Long?,
     private val page: Long,
     private val pageSize: Int,
-) : Query<TasksDomain, TasksList>() {
+) : Query<TasksDomain, TasksList> {
 
     private val offset = (page - 1) * pageSize
 
     override fun execute(domain: TasksDomain): TasksList {
         return transaction {
-            val tasksTable = domain.tables.tasks
+            val (tasks, users) = domain.tables
 
-            var query = tasksTable.selectAll()
+            var query = tasks.leftJoin(users).selectAll()
             if (!showFinished)
-                query = query.andWhere { tasksTable.finished eq false }
+                query = query.andWhere { tasks.finished eq false }
 
             if (search != null)
-                query = query.andWhere { tasksTable.name.lowerCase() like "%${search.lowercase()}%" }
+                query = query.andWhere { tasks.name.lowerCase() like "%${search.lowercase()}%" }
 
-            if (userPid != null)
-                query = query.andWhere { tasksTable.userPid eq userPid }
+            if (userId != null)
+                query = query.andWhere { tasks.userId eq userId }
 
             val total = query.copy().count()
-            val tasks = query.limit(pageSize, offset).map { Task(tasksTable, it) }
-            TasksList(tasks, page, pageSize, total)
+            val fetchedTasks = query.limit(pageSize, offset).map { Task(tasks, users, it) }
+            TasksList(fetchedTasks, page, pageSize, total)
         }
     }
 }

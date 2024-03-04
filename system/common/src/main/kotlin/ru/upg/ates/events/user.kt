@@ -1,8 +1,7 @@
-package ru.upg.ates.event
+package ru.upg.ates.events
 
 import ru.upg.ates.AtesEvent
 import ru.upg.ates.CUDEvent
-import ru.upg.ates.common.cqrs.IAggregate
 import java.util.UUID
 
 
@@ -19,7 +18,7 @@ data class UserChange(
 )
 
 
-interface UserCUD : AtesEvent, CUDEvent, IAggregate {
+interface UserCUD : AtesEvent, CUDEvent {
     data class Created(val user: UserChange) : UserCUD
     data class Updated(val user: UserChange) : UserCUD
 }

@@ -1,4 +1,4 @@
-package ru.upg.ates.common.events
+package ru.upg.ates
 
 interface Topic {
     val value: String

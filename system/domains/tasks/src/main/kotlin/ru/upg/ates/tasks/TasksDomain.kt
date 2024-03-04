@@ -4,16 +4,15 @@ import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 import ru.upg.ates.AtesTopic
-import ru.upg.ates.event.TaskBE
-import ru.upg.ates.event.TaskCUD
-import ru.upg.ates.event.UserCUD
+import ru.upg.ates.Domain
+import ru.upg.ates.KafkaEventsBroker
+import ru.upg.ates.events.TaskBE
+import ru.upg.ates.events.TaskCUD
+import ru.upg.ates.events.UserCUD
 import ru.upg.ates.model.DomainConfig
 import ru.upg.ates.tasks.command.SaveUserCommand
 import ru.upg.ates.tasks.table.TaskTable
 import ru.upg.ates.tasks.table.UserTable
-import ru.upg.ates.common.ddd.Domain
-import ru.upg.ates.common.ddd.handler
-import ru.upg.ates.common.events.KafkaEventsBroker
 
 class TasksDomain(
     val tables: Tables,
@@ -33,15 +32,14 @@ class TasksDomain(
         )
     )
 
-    private val listener = broker.listen("ates-tasks").apply {
-        register(AtesTopic.USERS, UserCUD::class, handler(::SaveUserCommand))
-        start()
-    }
+    private val listener = broker.listener("ates-tasks")
+        .register(AtesTopic.USERS, UserCUD::class, ::SaveUserCommand)
+        .listen()
 
 
     // persistence configuration
 
-    class Tables(
+    data class Tables(
         val tasks: TaskTable,
         val users: UserTable
     )
@@ -53,6 +51,7 @@ class TasksDomain(
             password = password
         )
 
+        // todo: setting migrations
         transaction {
             SchemaUtils.createMissingTablesAndColumns(
                 tables.users,

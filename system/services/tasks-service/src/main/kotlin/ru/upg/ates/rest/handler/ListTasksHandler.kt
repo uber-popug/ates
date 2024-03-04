@@ -7,10 +7,9 @@ import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.core.Status
 import org.http4k.core.queries
+import ru.upg.ates.fetch
 import ru.upg.ates.tasks.TasksDomain
 import ru.upg.ates.tasks.query.ListTasksQuery
-import ru.upg.ates.common.ddd.fetch
-import java.util.UUID
 
 class ListTasksHandler(
     private val mapper: ObjectMapper,
@@ -20,7 +19,7 @@ class ListTasksHandler(
     data class RequestPayload(
         val showFinished: Boolean = false,
         val search: String?,
-        val user: UUID?,
+        val user: Long?,
         val page: Long = 1,
         val pageSize: Int = 25
     )
@@ -32,7 +31,7 @@ class ListTasksHandler(
             ListTasksQuery(
                 showFinished = showFinished,
                 search = search,
-                userPid = user,
+                userId = user,
                 page = page,
                 pageSize = pageSize
             )

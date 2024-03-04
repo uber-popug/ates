@@ -2,51 +2,50 @@ package ru.upg.ates.tasks.command
 
 import org.jetbrains.exposed.sql.insertAndGetId
 import org.jetbrains.exposed.sql.transactions.transaction
-import ru.upg.ates.event.TaskBE
-import ru.upg.ates.event.TaskCUD
-import ru.upg.ates.event.TaskChange
+import ru.upg.ates.Command
+import ru.upg.ates.Event
+import ru.upg.ates.events.TaskBE
+import ru.upg.ates.events.TaskCUD
+import ru.upg.ates.events.TaskChange
+import ru.upg.ates.fetch
 import ru.upg.ates.tasks.TasksDomain
 import ru.upg.ates.tasks.model.Task
 import ru.upg.ates.tasks.query.GetRandomWorkersQuery
+import ru.upg.ates.tasks.query.GetTaskQuery
 import ru.upg.ates.tasks.table.TaskTable
-import ru.upg.ates.common.cqrs.Command
-import ru.upg.ates.common.cqrs.IAggregate
-import ru.upg.ates.common.ddd.fetch
-import ru.upg.ates.common.events.Event
 import java.util.*
 
 class CreateTaskCommand(
-    override val aggregate: Aggregate,
-) : Command<TasksDomain, CreateTaskCommand.Aggregate, Task>() {
-
-    data class Aggregate(val name: String) : IAggregate
-
+    private val name: String
+) : Command<TasksDomain, Task> {
 
     override fun execute(domain: TasksDomain): Pair<Task, List<Event>> {
         val query = GetRandomWorkersQuery(1)
 
-        val workerId = domain.fetch(query).ids.firstOrNull()
-            ?: throw IllegalStateException("Не найдено ни одного рабочего")
+        val workerId = domain.fetch(query).firstOrNull()
+            ?: throw IllegalStateException("No one worker was found")
 
         val change = TaskChange(
             pid = UUID.randomUUID(),
-            userPid = workerId,
-            name = aggregate.name,
+            userPid = workerId.pid,
+            name = this.name,
             price = randomPrice(),
             finished = false
         )
 
-        val id = transaction {
-            TaskTable.insertAndGetId {
+        val task = transaction {
+            val createdId = TaskTable.insertAndGetId {
                 it[pid] = change.pid
-                it[userPid] = change.userPid
+                it[userId] = workerId.id
                 it[name] = change.name
                 it[price] = change.price
                 it[finished] = change.finished
             }
+
+            domain.fetch(GetTaskQuery(createdId.value))
         }
 
-        return Task(id.value, change) to listOf(
+        return task to listOf(
             TaskCUD.Created(change),
             TaskBE.Assigned(change.pid, change.userPid)
         )

@@ -3,9 +3,9 @@ package ru.upg.ates.auth
 import org.junit.jupiter.api.Test
 import ru.upg.ates.auth.operation.RegisterUser
 import ru.upg.ates.auth.table.UserTable
-import ru.upg.ates.event.Role
+import ru.upg.ates.events.Role
 import ru.upg.ates.model.DomainConfig
-import ru.upg.ates.common.ddd.execute
+import ru.upg.ates.ddd.execute
 
 class RegisterUserTest {
 

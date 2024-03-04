@@ -1,10 +1,10 @@
 package ru.upg.ates.tasks.table
 
 import org.jetbrains.exposed.dao.id.LongIdTable
+import ru.upg.ates.table.AtesTable
 
-object TaskTable : LongIdTable("task") {
-    val pid = uuid("pid")
-    val userPid = uuid("user_pid").references(UserTable.id)
+object TaskTable : AtesTable("task") {
+    val userId = long("user_id").references(UserTable.id)
     val name = text("name")
     val price = integer("price")
     val finished = bool("finished")

@@ -1,9 +1,5 @@
 package ru.upg.ates
 
-import ru.upg.ates.event.TaskBE
-import ru.upg.ates.event.TaskCUD
-import ru.upg.ates.common.events.Topic
-
 /**
  * Naming based on pattern
  * domain.classification.description

@@ -6,10 +6,10 @@ import org.http4k.core.HttpHandler
 import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.core.Status
+import ru.upg.ates.execute
 import ru.upg.ates.tasks.TasksDomain
 import ru.upg.ates.tasks.model.Task
 import ru.upg.ates.tasks.command.CreateTaskCommand
-import ru.upg.ates.common.ddd.execute
 
 
 class CreateTaskHandler(
@@ -29,8 +29,7 @@ class CreateTaskHandler(
         val requestContent = request.bodyString()
         val payload = mapper.readValue<RequestPayload>(requestContent)
 
-        val aggregate = CreateTaskCommand.Aggregate(payload.name)
-        val command = CreateTaskCommand(aggregate)
+        val command = CreateTaskCommand(payload.name)
         val result = domain.execute(command)
 
         val responsePayload = ResponsePayload(result)

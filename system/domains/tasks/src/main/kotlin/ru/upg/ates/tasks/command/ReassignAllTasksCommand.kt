@@ -3,40 +3,37 @@ package ru.upg.ates.tasks.command
 import org.jetbrains.exposed.sql.andWhere
 import org.jetbrains.exposed.sql.batchUpsert
 import org.jetbrains.exposed.sql.transactions.transaction
-import ru.upg.ates.event.TaskBE
+import ru.upg.ates.Command
+import ru.upg.ates.Event
+import ru.upg.ates.events.TaskBE
+import ru.upg.ates.fetch
 import ru.upg.ates.tasks.TasksDomain
 import ru.upg.ates.tasks.query.GetRandomWorkersQuery
-import ru.upg.ates.common.cqrs.Command
-import ru.upg.ates.common.cqrs.IAggregate
-import ru.upg.ates.common.ddd.fetch
-import ru.upg.ates.common.events.Event
 
-class ReassignAllTasksCommand : Command<TasksDomain, IAggregate, Unit>() {
-    override val aggregate = IAggregate
-
+class ReassignAllTasksCommand : Command<TasksDomain, Unit> {
     override fun execute(domain: TasksDomain): Pair<Unit, List<Event>> {
         return Unit to transaction {
             domain.tables.tasks.let { tasks ->
                 val notFinishedTasks =
-                    tasks.select(tasks.id)
+                    tasks.select(tasks.id, tasks.pid)
                         .andWhere { tasks.finished eq false }
                         .toList()
 
                 val query = GetRandomWorkersQuery(notFinishedTasks.size)
-
-                val changes = domain.fetch(query).ids.mapIndexed { index, userPid ->
-                    TaskBE.Assigned(
+                val workerIds = domain.fetch(query)
+                val changes = workerIds.mapIndexed { index, workerId ->
+                    workerId.id to TaskBE.Assigned(
                         taskPid = notFinishedTasks[index][tasks.pid],
-                        userPid = userPid
+                        userPid = workerId.pid
                     )
                 }
 
-                tasks.batchUpsert(changes) { change ->
+                tasks.batchUpsert(changes) { (workerId, change) ->
                     this[tasks.pid] = change.taskPid
-                    this[tasks.userPid] = change.userPid
+                    this[tasks.userId] = workerId
                 }
 
-                changes
+                changes.map { it.second }
             }
         }
     }

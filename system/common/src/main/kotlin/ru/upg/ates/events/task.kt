@@ -1,4 +1,4 @@
-package ru.upg.ates.event
+package ru.upg.ates.events
 
 import ru.upg.ates.AtesEvent
 import ru.upg.ates.BusinessEvent

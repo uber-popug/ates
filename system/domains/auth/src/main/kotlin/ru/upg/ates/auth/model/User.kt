@@ -1,7 +1,7 @@
 package ru.upg.ates.auth.model
 
-import ru.upg.ates.event.Role
-import ru.upg.ates.event.UserChange
+import ru.upg.ates.events.Role
+import ru.upg.ates.events.UserChange
 import java.util.UUID
 
 data class User(

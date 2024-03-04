@@ -1,9 +1,9 @@
 package ru.upg.ates.tasks.table
 
-import org.jetbrains.exposed.dao.id.UUIDTable
-import ru.upg.ates.event.Role
+import ru.upg.ates.events.Role
+import ru.upg.ates.table.AtesTable
 
-object UserTable : UUIDTable("user", "pid") {
-    val username = text("username")
+object UserTable : AtesTable("user") {
     val role = enumeration<Role>("role")
+    val username = text("username")
 }

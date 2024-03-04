@@ -4,12 +4,12 @@ import org.jetbrains.exposed.sql.insertAndGetId
 import org.jetbrains.exposed.sql.transactions.transaction
 import ru.upg.ates.auth.AuthDomain
 import ru.upg.ates.auth.model.User
-import ru.upg.ates.event.Role
-import ru.upg.ates.event.UserCUD
-import ru.upg.ates.event.UserChange
-import ru.upg.ates.common.cqrs.Command
-import ru.upg.ates.common.cqrs.IAggregate
-import ru.upg.ates.common.events.Event
+import ru.upg.ates.events.Role
+import ru.upg.ates.events.UserCUD
+import ru.upg.ates.events.UserChange
+import ru.upg.ates.Command
+import ru.upg.ates.cqrs.IAggregate
+import ru.upg.ates.Event
 import java.util.*
 
 class RegisterUser(
