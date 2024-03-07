@@ -3,7 +3,6 @@ package ru.upg.ates.tasks.command
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
 import org.jetbrains.exposed.sql.upsert
-import org.slf4j.LoggerFactory
 import ru.upg.ates.Command
 import ru.upg.ates.events.Event
 import ru.upg.ates.events.UserCUD
@@ -14,12 +13,10 @@ class SaveUserCommand(
     private val event: UserCUD,
 ) : Command<TasksDomain, Unit> {
 
-    private val log = LoggerFactory.getLogger(javaClass)
-
     override fun execute(domain: TasksDomain): Pair<Unit, List<Event>> {
         when (event) {
-            is UserCUD.Created -> create(domain, event.user)
-            is UserCUD.Updated -> update(domain, event.user)
+            is UserCUD.Created -> create(domain, event.payload)
+            is UserCUD.Updated -> update(domain, event.payload)
         }
 
         return Unit to listOf()

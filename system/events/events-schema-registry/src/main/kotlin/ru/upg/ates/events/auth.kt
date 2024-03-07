@@ -1,5 +1,6 @@
 package ru.upg.ates.events
 
+import java.time.LocalDateTime
 import java.util.*
 
 
@@ -15,7 +16,22 @@ data class UserChange(
     val username: String,
 )
 
-sealed interface UserCUD : CUDEvent {
-    data class Created(val user: UserChange) : UserCUD
-    data class Updated(val user: UserChange) : UserCUD
+sealed class UserCUD(
+    override val id: UUID = UUID.randomUUID(),
+    override val timestamp: LocalDateTime = LocalDateTime.now(),
+) : CUDEvent<UserChange> {
+
+    data class Created(override val payload: UserChange) : UserCUD() {
+        override val jsonSchemaId = "user-created-1"
+        override val name = "UserCreated"
+        override val version = 1
+        override val producer = "tasks"
+    }
+
+    data class Updated(override val payload: UserChange) : UserCUD() {
+        override val jsonSchemaId = "user-updated-1"
+        override val name = "UserUpdated"
+        override val version = 1
+        override val producer = "tasks"
+    }
 }

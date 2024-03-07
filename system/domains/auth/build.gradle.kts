@@ -11,6 +11,8 @@ dependencies {
     implementation(libs.bundles.exposed)
 
     testImplementation(kotlin("test"))
+    testImplementation(libs.bundles.jackson)
+    testImplementation(libs.jackson.yaml)
 }
 
 tasks.test {

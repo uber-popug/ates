@@ -1,7 +1,10 @@
 package ru.upg.ates.events.broker
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
+import com.networknt.schema.InputFormat
+import com.networknt.schema.JsonSchemaFactory
+import com.networknt.schema.SpecVersion
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.clients.producer.KafkaProducer
@@ -15,37 +18,58 @@ import kotlin.time.toJavaDuration
 
 class KafkaEventsBroker(
     val url: String,
-    val notFoundTopic: Topic,
-    val card: Map<KClass<out Event>, Topic>
+    val jsonSchemas: Map<String, String>,
+    val mapper: ObjectMapper,
 ) : EventsBroker {
 
-    private val mapper = jacksonObjectMapper()
+    private val log = LoggerFactory.getLogger(javaClass)
 
     private val producerProps = mapOf(
         "bootstrap.servers" to url,
         "key.serializer" to "org.apache.kafka.common.serialization.StringSerializer",
-        "value.serializer" to "org.apache.kafka.common.serialization.ByteArraySerializer",
+        "value.serializer" to "org.apache.kafka.common.serialization.StringSerializer",
         "security.protocol" to "PLAINTEXT"
     )
 
-    private val producer = KafkaProducer<String, ByteArray>(producerProps)
+    private val producer = KafkaProducer<String, String>(producerProps)
 
 
-    override fun publish(event: Event) {
-        val topic = card[event::class] ?: notFoundTopic
+    override fun publish(topic: Topic, event: Event<*>) {
         val record = makeRecord(topic, event)
         producer.send(record).get()
     }
 
-    private fun makeRecord(topic: Topic, event: Event): ProducerRecord<String, ByteArray> {
-        val content = mapper.writeValueAsBytes(event)
+    private fun makeRecord(topic: Topic, event: Event<*>): ProducerRecord<String, String> {
+        val schemaMapper = ObjectMapper(YAMLFactory())
+
+        val factory =
+            JsonSchemaFactory
+                .builder(JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V4))
+                .yamlMapper(schemaMapper)
+                .jsonMapper(schemaMapper)
+                .build()
+
+        val schemaContent  = jsonSchemas[event.jsonSchemaId]!! // fixme
+        val schemaNode = schemaMapper.readTree(schemaContent)
+        val schema = factory.getSchema(schemaNode)
+
+        val eventContent = mapper.writeValueAsString(event)
+        val messages = schema.validate(eventContent, InputFormat.JSON)
+        if (messages.isNotEmpty()) {
+            val msg = messages.joinToString { it.message }
+            throw IllegalArgumentException(
+                "event ${event.name}${event.version} not corresponding " +
+                "schema ${event.jsonSchemaId} with validation message '$msg'"
+            )
+        }
+
         val recordId = System.currentTimeMillis().toString()
-        return ProducerRecord(topic.value, recordId, content)
+        return ProducerRecord(topic.value, recordId, eventContent)
     }
 
 
     override fun listener(consumerGroup: String): KafkaListener.KafkaListenerBuilder {
-        return KafkaListener.KafkaListenerBuilder(url, consumerGroup)
+        return KafkaListener.KafkaListenerBuilder(url, consumerGroup, mapper)
     }
 
     data class EventHandler(
@@ -95,11 +119,12 @@ class KafkaEventsBroker(
         class KafkaListenerBuilder(
             private val kafkaUrl: String,
             private val consumerGroup: String,
+            private val mapper: ObjectMapper,
         ): EventsBroker.Listener.Builder<KafkaListener> {
 
             private val handlers = mutableMapOf<String, EventHandler>()
 
-            override fun <E : Event> register(
+            override fun <E : Event<*>> register(
                 topic: Topic,
                 kclass: KClass<E>,
                 handler: (E) -> Unit
@@ -122,8 +147,6 @@ class KafkaEventsBroker(
                     "group.id" to consumerGroup,
                     "security.protocol" to "PLAINTEXT"
                 )
-
-                val mapper = jacksonObjectMapper()
 
                 return KafkaListener(props, mapper, handlers).listen()
             }

@@ -1,0 +1,40 @@
+$schema: http://json-schema.org/draft-04/schema#
+definitions:
+  UserChange:
+    type: object
+    required:
+      - pid
+      - role
+      - username
+    properties:
+      pid:
+        type: string
+      role:
+        type: string
+      username:
+        type: string
+
+title: UserCreatedV1
+description: Описание структуры события "Пользователь создан"
+type: object
+additionalProperties: false
+required:
+  - id
+  - version
+  - name
+  - timestamp
+  - producer
+  - payload
+properties:
+  id:
+    type: string
+  version:
+    enum: [ 1 ]
+  name:
+    enum: [ UserCreated ]
+  timestamp:
+    type: string
+  producer:
+    type: string
+  payload:
+    $ref: #/definitions/UserChange

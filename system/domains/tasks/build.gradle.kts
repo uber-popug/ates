@@ -7,8 +7,8 @@ dependencies {
     implementation(project(":system:events:events-broker"))
     implementation(project(":system:common"))
 
-    implementation(libs.postgresql)
     implementation(libs.bundles.exposed)
+    implementation(libs.postgresql)
 
     testImplementation(kotlin("test"))
 }

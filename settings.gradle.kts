@@ -27,6 +27,7 @@ dependencyResolutionManagement {
 
             library("jackson-kotlin", "com.fasterxml.jackson.module:jackson-module-kotlin:2.9.8")
             library("jackson-jsr", "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.16.1")
+            library("jackson-yaml", "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.10.1")
             bundle("jackson", listOf("jackson-kotlin", "jackson-jsr"))
 
             version("exposed", "0.48.0")

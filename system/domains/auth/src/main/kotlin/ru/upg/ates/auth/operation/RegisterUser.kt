@@ -3,7 +3,7 @@ package ru.upg.ates.auth.operation
 import org.jetbrains.exposed.sql.insertAndGetId
 import org.jetbrains.exposed.sql.transactions.transaction
 import ru.upg.ates.Command
-import ru.upg.ates.Event
+import ru.upg.ates.events.Event
 import ru.upg.ates.auth.AuthDomain
 import ru.upg.ates.auth.model.User
 import ru.upg.ates.events.Role
@@ -17,7 +17,7 @@ class RegisterUser(
     private val password: String
 ): Command<AuthDomain, User> {
 
-    override fun execute(domain: AuthDomain): Pair<User, List<Event>> {
+    override fun execute(domain: AuthDomain): Pair<User, List<Event<*>>> {
         val change = UserChange(
             pid = UUID.randomUUID(),
             role = role,
