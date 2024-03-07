@@ -1,6 +1,5 @@
 package ru.upg.ates.events
 
-import ru.upg.ates.CUDEvent
 import java.util.*
 
 

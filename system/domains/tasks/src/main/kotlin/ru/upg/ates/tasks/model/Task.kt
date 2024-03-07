@@ -1,7 +1,6 @@
 package ru.upg.ates.tasks.model
 
 import org.jetbrains.exposed.sql.ResultRow
-import ru.upg.ates.events.TaskChange
 import ru.upg.ates.tasks.table.TaskTable
 import ru.upg.ates.tasks.table.UserTable
 import java.util.*

@@ -5,10 +5,10 @@ import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 import ru.upg.ates.AtesTopic
 import ru.upg.ates.Domain
-import ru.upg.ates.KafkaEventsBroker
 import ru.upg.ates.events.TaskBE
 import ru.upg.ates.events.TaskCUD
 import ru.upg.ates.events.UserCUD
+import ru.upg.ates.events.broker.KafkaEventsBroker
 import ru.upg.ates.handler
 import ru.upg.ates.model.DomainConfig
 import ru.upg.ates.tasks.command.SaveUserCommand

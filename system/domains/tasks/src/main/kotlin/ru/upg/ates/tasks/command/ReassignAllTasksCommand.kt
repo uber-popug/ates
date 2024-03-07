@@ -5,7 +5,7 @@ import org.jetbrains.exposed.sql.batchUpsert
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import ru.upg.ates.Command
-import ru.upg.ates.Event
+import ru.upg.ates.events.Event
 import ru.upg.ates.events.TaskBE
 import ru.upg.ates.fetch
 import ru.upg.ates.tasks.TasksDomain

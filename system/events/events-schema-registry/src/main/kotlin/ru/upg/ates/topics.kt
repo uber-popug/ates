@@ -1,5 +1,9 @@
 package ru.upg.ates
 
+interface Topic {
+    val value: String
+}
+
 /**
  * Naming based on pattern
  * domain.classification.description

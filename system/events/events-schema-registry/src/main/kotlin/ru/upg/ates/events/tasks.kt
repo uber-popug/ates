@@ -1,7 +1,5 @@
 package ru.upg.ates.events
 
-import ru.upg.ates.BusinessEvent
-import ru.upg.ates.CUDEvent
 import java.util.*
 
 data class TaskChange(

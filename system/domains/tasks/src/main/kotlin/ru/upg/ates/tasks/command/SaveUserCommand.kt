@@ -1,12 +1,11 @@
 package ru.upg.ates.tasks.command
 
-import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
 import org.jetbrains.exposed.sql.upsert
 import org.slf4j.LoggerFactory
 import ru.upg.ates.Command
-import ru.upg.ates.Event
+import ru.upg.ates.events.Event
 import ru.upg.ates.events.UserCUD
 import ru.upg.ates.events.UserChange
 import ru.upg.ates.tasks.TasksDomain

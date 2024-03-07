@@ -1,5 +1,7 @@
 package ru.upg.ates
 
+import ru.upg.ates.events.broker.EventsBroker
+
 
 interface Domain {
     val broker: EventsBroker
