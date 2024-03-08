@@ -19,9 +19,9 @@ class ListTasksQuery(
 
     private val offset = (page - 1) * pageSize
 
-    override fun execute(domain: TasksDomain): TasksList {
+    override fun execute(context: TasksDomain): TasksList {
         return transaction {
-            val (tasks, users) = domain.tables
+            val (tasks, users) = context.tables
 
             var query = tasks.leftJoin(users).selectAll()
             if (!showFinished)

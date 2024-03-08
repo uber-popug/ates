@@ -5,8 +5,8 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import ru.upg.ates.Command
 import ru.upg.ates.events.Event
 import ru.upg.ates.events.TaskBE
-import ru.upg.ates.events.TaskCUD
-import ru.upg.ates.events.TaskChange
+import ru.upg.ates.events.TaskChanged
+import ru.upg.ates.events.Change
 import ru.upg.ates.fetch
 import ru.upg.ates.tasks.TasksDomain
 import ru.upg.ates.tasks.model.Task
@@ -19,13 +19,13 @@ class CreateTaskCommand(
     private val name: String
 ) : Command<TasksDomain, Task> {
 
-    override fun execute(domain: TasksDomain): Pair<Task, List<Event>> {
+    override fun execute(context: TasksDomain): Pair<Task, List<Event>> {
         val query = GetRandomWorkersQuery(1)
 
-        val workerId = domain.fetch(query).firstOrNull()
+        val workerId = context.fetch(query).firstOrNull()
             ?: throw IllegalStateException("No one worker was found")
 
-        val change = TaskChange(
+        val change = Change(
             pid = UUID.randomUUID(),
             userPid = workerId.pid,
             name = this.name,
@@ -42,12 +42,12 @@ class CreateTaskCommand(
                 it[finished] = change.finished
             }
 
-            domain.fetch(GetTaskQuery(createdId.value))
+            context.fetch(GetTaskQuery(createdId.value))
         }
 
         return task to listOf(
-            TaskCUD.Created(change),
-            TaskBE.Assigned(change.pid, change.userPid)
+            TaskChanged.Created(change),
+            TaskBE.TaskAssigned(change.pid, change.userPid)
         )
     }
 

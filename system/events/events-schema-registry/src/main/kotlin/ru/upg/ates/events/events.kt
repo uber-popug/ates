@@ -1,26 +1,15 @@
 package ru.upg.ates.events
 
 import java.time.Instant
-import java.time.LocalDateTime
-import java.util.UUID
+import java.util.*
 
-
-interface Event<T> {
-    val id: UUID
-    val timestamp: Instant
-    val name: String
-    val version: Int
-    val jsonSchemaId: String
-    val producer: String
-    val payload: T
+abstract class Event<T>(
+    open val id: UUID = UUID.randomUUID(),
+    open val timestamp: Instant = Instant.now(),
+) {
+    abstract val payload: T
+    abstract val jsonSchemaId: String
+    abstract val name: String
+    abstract val version: Int
+    abstract val producer: String
 }
-
-/**
- * Marker interface to note Business Events
- */
-interface BusinessEvent<T> : Event<T>
-
-/**
- * Marker interface to note CUD (Create, Update, Delete) events
- */
-interface CUDEvent<T> : Event<T>

@@ -7,7 +7,7 @@ import ru.upg.ates.events.Event
 import ru.upg.ates.auth.AuthDomain
 import ru.upg.ates.auth.model.User
 import ru.upg.ates.events.Role
-import ru.upg.ates.events.UserCUD
+import ru.upg.ates.events.UserChanged
 import ru.upg.ates.events.UserChange
 import java.util.*
 
@@ -17,7 +17,7 @@ class RegisterUser(
     private val password: String
 ): Command<AuthDomain, User> {
 
-    override fun execute(domain: AuthDomain): Pair<User, List<Event<*>>> {
+    override fun execute(context: AuthDomain): Pair<User, List<Event<*>>> {
         val change = UserChange(
             pid = UUID.randomUUID(),
             role = role,
@@ -25,7 +25,7 @@ class RegisterUser(
         )
 
         val id = transaction {
-            domain.tables.users.let { table ->
+            context.tables.users.let { table ->
                 table.insertAndGetId {
                     it[pid] = change.pid
                     it[role] = this@RegisterUser.role
@@ -35,6 +35,6 @@ class RegisterUser(
             }
         }
 
-        return User(id.value, change) to listOf(UserCUD.Created(change))
+        return User(id.value, change) to listOf(UserChanged.Created(change))
     }
 }

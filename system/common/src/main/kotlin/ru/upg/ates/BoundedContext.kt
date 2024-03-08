@@ -5,29 +5,22 @@ import ru.upg.ates.broker.EventsBroker
 import kotlin.reflect.KClass
 
 
-interface Domain {
+interface BoundedContext {
     val broker: EventsBroker
     val notFoundTopic: Topic
     val card: Map<KClass<out Event<*>>, Topic>
-}
 
-
-fun <D : Domain, R> D.execute(command: Command<D, R>): R {
-    val (result, events) = command.execute(this)
-
-    events.forEach { event ->
+    fun publish(event: Event<*>) {
         val topic = card[event::class] ?: notFoundTopic
         broker.publish(topic, event)
     }
-
-    return result
 }
 
-fun <D : Domain, T> D.fetch(query: Query<D, T>): T {
-    return query.execute(this)
+fun <D : BoundedContext, R> D.execute(command: Command<D, R>): R {
+    return command.execute(this)
 }
 
-fun <D : Domain, E, C : Command<D, *>> D.handler(
+fun <D : BoundedContext, E, C : Command<D, *>> D.handler(
     commandConstructor: (E) -> C
 ): (E) -> Unit {
     return { event: E ->

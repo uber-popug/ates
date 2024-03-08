@@ -13,15 +13,15 @@ import ru.upg.ates.tasks.model.Task
 import ru.upg.ates.tasks.query.GetRandomWorkersQuery
 
 class ReassignAllTasksCommand : Command<TasksDomain, Unit> {
-    override fun execute(domain: TasksDomain): Pair<Unit, List<Event>> {
-        val (tasks, users) = domain.tables
+    override fun execute(context: TasksDomain): Pair<Unit, List<Event>> {
+        val (tasks, users) = context.tables
         return Unit to transaction {
             val notFinishedTasks =
                 tasks.leftJoin(users).selectAll()
                     .andWhere { tasks.finished eq false }
                     .map { Task(tasks, users, it) }
 
-            val workerIds = domain.fetch(GetRandomWorkersQuery(notFinishedTasks.size))
+            val workerIds = context.fetch(GetRandomWorkersQuery(notFinishedTasks.size))
             val changes = workerIds.mapIndexed { index, workerId ->
                 workerId to notFinishedTasks[index]
             }
@@ -37,7 +37,7 @@ class ReassignAllTasksCommand : Command<TasksDomain, Unit> {
             }
 
             changes.map { (workerId, task) ->
-                TaskBE.Assigned(task.pid, workerId.pid)
+                TaskBE.TaskAssigned(task.pid, workerId.pid)
             }
         }
     }

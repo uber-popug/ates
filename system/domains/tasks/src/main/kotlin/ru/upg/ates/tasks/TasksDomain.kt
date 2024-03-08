@@ -4,10 +4,10 @@ import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 import ru.upg.ates.AtesTopic
-import ru.upg.ates.Domain
+import ru.upg.ates.BoundedContext
 import ru.upg.ates.events.TaskBE
-import ru.upg.ates.events.TaskCUD
-import ru.upg.ates.events.UserCUD
+import ru.upg.ates.events.TaskChanged
+import ru.upg.ates.events.UserChanged
 import ru.upg.ates.broker.KafkaEventsBroker
 import ru.upg.ates.handler
 import ru.upg.ates.model.DomainConfig
@@ -18,7 +18,7 @@ import ru.upg.ates.tasks.table.UserTable
 class TasksDomain(
     val tables: Tables,
     val config: DomainConfig,
-) : Domain {
+) : BoundedContext {
 
     // event broker configuration
 
@@ -26,15 +26,15 @@ class TasksDomain(
         url = config.kafkaUrl,
         notFoundTopic = AtesTopic.NOT_FOUND,
         card = mapOf(
-            TaskCUD.Created::class to AtesTopic.TASKS,
-            TaskCUD.Updated::class to AtesTopic.TASKS,
-            TaskBE.Assigned::class to AtesTopic.TASK_ASSIGNED,
-            TaskBE.Finished::class to AtesTopic.TASK_FINISHED
+            TaskChanged.Created::class to AtesTopic.TASKS,
+            TaskChanged.Updated::class to AtesTopic.TASKS,
+            TaskBE.TaskAssigned::class to AtesTopic.TASK_ASSIGNED,
+            TaskBE.TaskFinished::class to AtesTopic.TASK_FINISHED
         )
     )
 
     private val listener = broker.listener("ates-tasks")
-        .register(AtesTopic.USERS, UserCUD::class, handler(::SaveUserCommand))
+        .register(AtesTopic.USERS, UserChanged::class, handler(::SaveUserCommand))
         .listen()
 
 

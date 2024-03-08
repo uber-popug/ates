@@ -8,8 +8,8 @@ import ru.upg.ates.tasks.TasksDomain
 import ru.upg.ates.tasks.model.Task
 
 class GetTaskQuery(private val id: Long) : Query<TasksDomain, Task> {
-    override fun execute(domain: TasksDomain): Task {
-        val (tasks, users) = domain.tables
+    override fun execute(context: TasksDomain): Task {
+        val (tasks, users) = context.tables
         return transaction {
             tasks.leftJoin(users)
                 .selectAll()

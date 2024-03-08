@@ -5,18 +5,18 @@ import org.jetbrains.exposed.sql.update
 import org.jetbrains.exposed.sql.upsert
 import ru.upg.ates.Command
 import ru.upg.ates.events.Event
-import ru.upg.ates.events.UserCUD
+import ru.upg.ates.events.UserChanged
 import ru.upg.ates.events.UserChange
 import ru.upg.ates.tasks.TasksDomain
 
 class SaveUserCommand(
-    private val event: UserCUD,
+    private val event: UserChanged,
 ) : Command<TasksDomain, Unit> {
 
-    override fun execute(domain: TasksDomain): Pair<Unit, List<Event<*>>> {
+    override fun execute(context: TasksDomain): Pair<Unit, List<Event<*>>> {
         when (event) {
-            is UserCUD.Created -> create(domain, event.payload)
-            is UserCUD.Updated -> update(domain, event.payload)
+            is UserChanged.Created -> create(context, event.payload)
+            is UserChanged.Updated -> update(context, event.payload)
         }
 
         return Unit to listOf()

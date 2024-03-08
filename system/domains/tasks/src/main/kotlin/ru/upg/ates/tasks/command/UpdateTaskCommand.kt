@@ -5,8 +5,8 @@ import org.jetbrains.exposed.sql.update
 import ru.upg.ates.Command
 import ru.upg.ates.events.Event
 import ru.upg.ates.events.TaskBE
-import ru.upg.ates.events.TaskCUD
-import ru.upg.ates.events.TaskChange
+import ru.upg.ates.events.TaskChanged
+import ru.upg.ates.events.Change
 import ru.upg.ates.fetch
 import ru.upg.ates.tasks.TasksDomain
 import ru.upg.ates.tasks.model.Task
@@ -20,11 +20,11 @@ class UpdateTaskCommand(
     private val name: String?,
 ) : Command<TasksDomain, Task> {
 
-    override fun execute(domain: TasksDomain): Pair<Task, List<Event>> {
-        val actualTask = domain.fetch(GetTaskQuery(id))
-        val targetUser = userId?.let { domain.fetch(GetUserQuery(it)) }
+    override fun execute(context: TasksDomain): Pair<Task, List<Event>> {
+        val actualTask = context.fetch(GetTaskQuery(id))
+        val targetUser = userId?.let { context.fetch(GetUserQuery(it)) }
 
-        val change = TaskChange(
+        val change = Change(
             pid = actualTask.pid,
             userPid = targetUser?.pid ?: actualTask.assignedTo.pid,
             name = name ?: actualTask.name,
@@ -33,7 +33,7 @@ class UpdateTaskCommand(
         )
 
         val updatedTask = transaction {
-            domain.tables.tasks.let { tasks ->
+            context.tables.tasks.let { tasks ->
                 tasks.update({ tasks.id eq this@UpdateTaskCommand.id }) { update ->
                     update[assignedTo] = targetUser?.id ?: actualTask.assignedTo.id
                     update[price] = change.price
@@ -41,12 +41,12 @@ class UpdateTaskCommand(
                 }
             }
 
-            domain.fetch(GetTaskQuery(this@UpdateTaskCommand.id))
+            context.fetch(GetTaskQuery(this@UpdateTaskCommand.id))
         }
 
-        val events = mutableListOf<Event>(TaskCUD.Updated(change))
+        val events = mutableListOf<Event>(TaskChanged.Updated(change))
         if (actualTask.assignedTo.id != updatedTask.assignedTo.id) {
-            events.add(TaskBE.Assigned(updatedTask.pid, updatedTask.assignedTo.pid))
+            events.add(TaskBE.TaskAssigned(updatedTask.pid, updatedTask.assignedTo.pid))
         }
 
         return updatedTask to events

@@ -12,9 +12,9 @@ class GetRandomWorkersQuery(
     private val amount: Int
 ) : Query<TasksDomain, List<EntityId>> {
 
-    override fun execute(domain: TasksDomain): List<EntityId> {
+    override fun execute(context: TasksDomain): List<EntityId> {
         val allWorkers = transaction {
-            domain.tables.users.let { users ->
+            context.tables.users.let { users ->
                 users.select(users.id, users.pid)
                 .andWhere { UserTable.role eq Role.WORKER }
                 .map { EntityId(users, it) }

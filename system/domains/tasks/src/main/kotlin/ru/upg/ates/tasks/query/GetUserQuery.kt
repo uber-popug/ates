@@ -7,9 +7,9 @@ import ru.upg.ates.tasks.TasksDomain
 import ru.upg.ates.tasks.model.User
 
 class GetUserQuery(private val id: Long) : Query<TasksDomain, User> {
-    override fun execute(domain: TasksDomain): User {
+    override fun execute(context: TasksDomain): User {
         return transaction {
-            domain.tables.users
+            context.tables.users
                 .getById(this@GetUserQuery.id, ::User)
                 ?: throw IllegalArgumentException("Not found user by id $id")
         }
