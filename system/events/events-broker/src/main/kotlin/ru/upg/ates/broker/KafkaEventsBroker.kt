@@ -1,10 +1,8 @@
-package ru.upg.ates.events.broker
+package ru.upg.ates.broker
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.networknt.schema.InputFormat
-import com.networknt.schema.JsonSchemaFactory
-import com.networknt.schema.SpecVersion
+import com.networknt.schema.JsonSchema
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.clients.producer.KafkaProducer
@@ -17,9 +15,9 @@ import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.toJavaDuration
 
 class KafkaEventsBroker(
-    val url: String,
-    val jsonSchemas: Map<String, String>,
-    val mapper: ObjectMapper,
+    private val url: String,
+    private val jsonSchemas: Map<String, JsonSchema>,
+    private val mapper: ObjectMapper,
 ) : EventsBroker {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -40,20 +38,12 @@ class KafkaEventsBroker(
     }
 
     private fun makeRecord(topic: Topic, event: Event<*>): ProducerRecord<String, String> {
-        val schemaMapper = ObjectMapper(YAMLFactory())
-
-        val factory =
-            JsonSchemaFactory
-                .builder(JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V4))
-                .yamlMapper(schemaMapper)
-                .jsonMapper(schemaMapper)
-                .build()
-
-        val schemaContent  = jsonSchemas[event.jsonSchemaId]!! // fixme
-        val schemaNode = schemaMapper.readTree(schemaContent)
-        val schema = factory.getSchema(schemaNode)
-
         val eventContent = mapper.writeValueAsString(event)
+
+        val schema  = jsonSchemas[event.jsonSchemaId] ?: throw IllegalArgumentException(
+            "Not found json schema for id ${event.jsonSchemaId}"
+        )
+
         val messages = schema.validate(eventContent, InputFormat.JSON)
         if (messages.isNotEmpty()) {
             val msg = messages.joinToString { it.message }

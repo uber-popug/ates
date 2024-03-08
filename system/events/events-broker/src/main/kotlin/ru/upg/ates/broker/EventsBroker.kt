@@ -1,4 +1,4 @@
-package ru.upg.ates.events.broker
+package ru.upg.ates.broker
 
 import ru.upg.ates.Topic
 import ru.upg.ates.events.Event

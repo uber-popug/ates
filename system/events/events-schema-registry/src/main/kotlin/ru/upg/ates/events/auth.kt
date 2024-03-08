@@ -22,14 +22,14 @@ sealed class UserCUD(
 ) : CUDEvent<UserChange> {
 
     data class Created(override val payload: UserChange) : UserCUD() {
-        override val jsonSchemaId = "user-created-1"
+        override val jsonSchemaId = "#/users/created/1.yaml"
         override val name = "UserCreated"
         override val version = 1
         override val producer = "tasks"
     }
 
     data class Updated(override val payload: UserChange) : UserCUD() {
-        override val jsonSchemaId = "user-updated-1"
+        override val jsonSchemaId = "#/users/updated/1.yaml"
         override val name = "UserUpdated"
         override val version = 1
         override val producer = "tasks"

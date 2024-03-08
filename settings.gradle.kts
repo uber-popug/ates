@@ -19,6 +19,7 @@ dependencyResolutionManagement {
             library("kafka", "org.apache.kafka:kafka-clients:3.7.0")
             library("postgresql", "org.postgresql:postgresql:42.7.1")
             library("slf4j", "org.slf4j:slf4j-api:2.0.9")
+            library("json-schema-validator", "com.networknt:json-schema-validator:1.3.3")
 
             version("logback", "1.5.1")
             library("logback-core", "ch.qos.logback", "logback-core").versionRef("logback")
@@ -29,6 +30,7 @@ dependencyResolutionManagement {
             library("jackson-jsr", "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.16.1")
             library("jackson-yaml", "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.10.1")
             bundle("jackson", listOf("jackson-kotlin", "jackson-jsr"))
+            bundle("json-schema", listOf("json-schema-validator", "jackson-kotlin", "jackson-yaml"))
 
             version("exposed", "0.48.0")
             library("exposed-core", "org.jetbrains.exposed", "exposed-core").versionRef("exposed")

@@ -9,8 +9,8 @@ import ru.upg.ates.Topic
 import ru.upg.ates.auth.table.UserTable
 import ru.upg.ates.events.Event
 import ru.upg.ates.events.UserCUD
-import ru.upg.ates.events.broker.EventsBroker
-import ru.upg.ates.events.broker.KafkaEventsBroker
+import ru.upg.ates.broker.EventsBroker
+import ru.upg.ates.broker.KafkaEventsBroker
 import ru.upg.ates.model.DomainConfig
 import kotlin.reflect.KClass
 

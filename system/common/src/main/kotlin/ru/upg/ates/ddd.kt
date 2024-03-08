@@ -1,7 +1,7 @@
 package ru.upg.ates
 
 import ru.upg.ates.events.Event
-import ru.upg.ates.events.broker.EventsBroker
+import ru.upg.ates.broker.EventsBroker
 import kotlin.reflect.KClass
 
 

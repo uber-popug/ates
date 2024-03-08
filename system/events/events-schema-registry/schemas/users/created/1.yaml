@@ -1,6 +1,7 @@
+id: '#/users/created/1.yaml'
 $schema: http://json-schema.org/draft-04/schema#
 definitions:
-  UserChange:
+  Payload:
     type: object
     required:
       - pid
@@ -14,27 +15,27 @@ definitions:
       username:
         type: string
 
-title: UserCreatedV1
-description: Описание структуры события "Пользователь создан"
 type: object
-additionalProperties: false
 required:
-  - id
-  - version
   - name
+  - version
+  - jsonSchemaId
+  - id
   - timestamp
   - producer
   - payload
 properties:
-  id:
-    type: string
-  version:
-    enum: [ 1 ]
   name:
     enum: [ UserCreated ]
+  version:
+    enum: [ 1 ]
+  jsonSchemaId:
+    enum: [ '#/users/created/1.yaml' ]
+  id:
+    type: string
   timestamp:
     type: string
   producer:
     type: string
   payload:
-    $ref: #/definitions/UserChange
+    $ref: '#/definitions/Payload'

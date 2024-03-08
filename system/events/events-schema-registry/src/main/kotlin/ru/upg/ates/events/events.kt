@@ -6,10 +6,10 @@ import java.util.UUID
 
 interface Event<T> {
     val id: UUID
+    val timestamp: LocalDateTime
     val name: String
     val version: Int
     val jsonSchemaId: String
-    val timestamp: LocalDateTime
     val producer: String
     val payload: T
 }
