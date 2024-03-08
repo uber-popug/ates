@@ -12,30 +12,24 @@ import ru.upg.ates.model.DomainConfig
 import ru.upg.ates.rest.handler.CreateTaskHandler
 import ru.upg.ates.rest.handler.ListTasksHandler
 import ru.upg.ates.rest.handler.ReassignAllTasksHandler
-import ru.upg.ates.tasks.TasksDomain
-import ru.upg.ates.tasks.table.TaskTable
-import ru.upg.ates.tasks.table.UserTable
+import ru.upg.ates.tasks.TasksContext
 
 
-val tasksServiceApp = { domain: TasksDomain ->
+val tasksServiceApp = { domain: TasksContext ->
     val mapper = jacksonObjectMapper()
 
     // setting Tasks service REST API
     //  1) list tasks           GET  /tasks?showFinished&search&user&page&sort
     //  2) creating task        POST /tasks
     //  3) reassign all tasks   POST /tasks/reassign
-    //  4) update task          PUT  /tasks/{id}
-    //  5) finish task          POST /tasks/{id}/finish
+    //  4) finish task          POST /tasks/{id}/finish
     routes(
         "/ping" bind Method.GET to { Response(Status.OK).body("pong") },
         "/tasks" bind routes(
             Method.GET bind ListTasksHandler(mapper, domain),
             Method.POST bind CreateTaskHandler(mapper, domain),
             "/reassign" bind Method.POST to ReassignAllTasksHandler(mapper, domain),
-//                "/{id}" bind routes(
-//                     handlers.updateTask,
-//                    "/finish" bind handlers.finishTask,
-//                )
+//                "/{id}/finish" bind handlers.finishTask,
         )
     )
 }
@@ -48,13 +42,8 @@ fun main() {
         .start()
 }
 
-private fun buildDomain(): TasksDomain {
-    val tables = TasksDomain.Tables(
-        TaskTable,
-        UserTable
-    )
-
-    return TasksDomain(
+private fun buildDomain(): TasksContext {
+    return TasksContext(
         tables, DomainConfig(
             kafkaUrl = "http://localhost:9994",
             db = DomainConfig.Db(

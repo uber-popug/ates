@@ -9,7 +9,7 @@ import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.slf4j.LoggerFactory
 import ru.upg.ates.Topic
-import ru.upg.ates.events.Event
+import ru.upg.ates.Event
 import kotlin.reflect.KClass
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.toJavaDuration
@@ -32,12 +32,12 @@ class KafkaEventsBroker(
     private val producer = KafkaProducer<String, String>(producerProps)
 
 
-    override fun publish(topic: Topic, event: Event<*>) {
+    override fun publish(topic: Topic, event: Event) {
         val record = makeRecord(topic, event)
         producer.send(record).get()
     }
 
-    private fun makeRecord(topic: Topic, event: Event<*>): ProducerRecord<String, String> {
+    private fun makeRecord(topic: Topic, event: Event): ProducerRecord<String, String> {
         val eventContent = mapper.writeValueAsString(event)
 
         val schema  = jsonSchemas[event.jsonSchemaId] ?: throw IllegalArgumentException(
@@ -114,7 +114,7 @@ class KafkaEventsBroker(
 
             private val handlers = mutableMapOf<String, EventHandler>()
 
-            override fun <E : Event<*>> register(
+            override fun <E : Event> register(
                 topic: Topic,
                 kclass: KClass<E>,
                 handler: (E) -> Unit

@@ -34,10 +34,10 @@ class RegisterUserTest {
             password = "postgres"
         )
 
-        val domain = AuthDomain(
+        val domain = AuthContext(
             broker = broker,
             database = database,
-            tables = AuthDomain.Tables(
+            tables = AuthContext.Tables(
                 users = UserTable
             )
         )

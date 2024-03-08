@@ -11,7 +11,7 @@ import ru.upg.ates.billing.command.SaveUser
 import ru.upg.ates.broker.EventsBroker
 import ru.upg.ates.events.BalanceChanged
 import ru.upg.ates.events.EmailCreated
-import ru.upg.ates.events.Event
+import ru.upg.ates.Event
 import ru.upg.ates.events.PaymentCreated
 import ru.upg.ates.events.TaskAssigned
 import ru.upg.ates.events.TaskChanged
@@ -31,7 +31,7 @@ class BillingContext(val serviceName: String, override val broker: EventsBroker)
 
     override val notFoundTopic = AtesTopic.NOT_FOUND
 
-    override val card: Map<KClass<out Event<*>>, Topic> = mapOf(
+    override val card: Map<KClass<out Event>, Topic> = mapOf(
         BalanceChanged::class to AtesTopic.BALANCE_CHANGED,
         PaymentCreated::class to AtesTopic.PAYMENT_CREATED,
         EmailCreated::class to AtesTopic.EMAILS,

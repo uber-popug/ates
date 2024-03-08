@@ -5,39 +5,39 @@ import org.jetbrains.exposed.sql.batchUpsert
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import ru.upg.ates.Command
-import ru.upg.ates.events.Event
-import ru.upg.ates.events.TaskBE
-import ru.upg.ates.fetch
-import ru.upg.ates.tasks.TasksDomain
+import ru.upg.ates.events.TaskAssigned
+import ru.upg.ates.execute
+import ru.upg.ates.tasks.TasksContext
 import ru.upg.ates.tasks.model.Task
-import ru.upg.ates.tasks.query.GetRandomWorkersQuery
+import ru.upg.ates.tasks.query.GetRandomWorkers
+import ru.upg.ates.tasks.table.TaskTable
+import ru.upg.ates.tasks.table.UserTable
 
-class ReassignAllTasksCommand : Command<TasksDomain, Unit> {
-    override fun execute(context: TasksDomain): Pair<Unit, List<Event>> {
-        val (tasks, users) = context.tables
-        return Unit to transaction {
+object ReassignAllTasks : Command.Silent<TasksContext> {
+    override fun execute(context: TasksContext) = with(context) {
+        val (tasks, users) = TaskTable to UserTable
+        transaction {
             val notFinishedTasks =
                 tasks.leftJoin(users).selectAll()
                     .andWhere { tasks.finished eq false }
                     .map { Task(tasks, users, it) }
 
-            val workerIds = context.fetch(GetRandomWorkersQuery(notFinishedTasks.size))
+            val workerIds = execute(GetRandomWorkers(notFinishedTasks.size))
             val changes = workerIds.mapIndexed { index, workerId ->
                 workerId to notFinishedTasks[index]
             }
 
-            val exclude = listOf(tasks.pid, tasks.price, tasks.name, tasks.finished)
+            val exclude = listOf(tasks.pid, tasks.title, tasks.finished)
             tasks.batchUpsert(changes, onUpdateExclude = exclude) { (workerId, task) ->
                 this[tasks.id] = task.id
                 this[tasks.pid] = task.pid
                 this[tasks.assignedTo] = workerId.id
-                this[tasks.name] = task.name
-                this[tasks.price] = task.price
+                this[tasks.title] = task.name
                 this[tasks.finished] = false
             }
 
-            changes.map { (workerId, task) ->
-                TaskBE.TaskAssigned(task.pid, workerId.pid)
+            changes.forEach { (workerId, task) ->
+                publish(TaskAssigned(task.pid, workerId.pid))
             }
         }
     }

@@ -5,9 +5,11 @@ import org.jetbrains.exposed.sql.lowerCase
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import ru.upg.ates.Query
-import ru.upg.ates.tasks.TasksDomain
+import ru.upg.ates.tasks.TasksContext
 import ru.upg.ates.tasks.model.Task
 import ru.upg.ates.tasks.model.TasksList
+import ru.upg.ates.tasks.table.TaskTable
+import ru.upg.ates.tasks.table.UserTable
 
 class ListTasksQuery(
     private val showFinished: Boolean = false,
@@ -15,20 +17,20 @@ class ListTasksQuery(
     private val userId: Long?,
     private val page: Long,
     private val pageSize: Int,
-) : Query<TasksDomain, TasksList> {
+) : Query<TasksContext, TasksList> {
 
     private val offset = (page - 1) * pageSize
 
-    override fun execute(context: TasksDomain): TasksList {
+    override fun execute(context: TasksContext): TasksList {
         return transaction {
-            val (tasks, users) = context.tables
+            val (tasks, users) = TaskTable to UserTable
 
             var query = tasks.leftJoin(users).selectAll()
             if (!showFinished)
                 query = query.andWhere { tasks.finished eq false }
 
             if (search != null)
-                query = query.andWhere { tasks.name.lowerCase() like "%${search.lowercase()}%" }
+                query = query.andWhere { tasks.title.lowerCase() like "%${search.lowercase()}%" }
 
             if (userId != null)
                 query = query.andWhere { tasks.assignedTo eq userId }

@@ -1,6 +1,5 @@
 package ru.upg.ates
 
-import ru.upg.ates.events.Event
 import ru.upg.ates.broker.EventsBroker
 import kotlin.reflect.KClass
 
@@ -8,9 +7,9 @@ import kotlin.reflect.KClass
 interface BoundedContext {
     val broker: EventsBroker
     val notFoundTopic: Topic
-    val card: Map<KClass<out Event<*>>, Topic>
+    val card: Map<KClass<out Event>, Topic>
 
-    fun publish(event: Event<*>) {
+    fun publish(event: Event) {
         val topic = card[event::class] ?: notFoundTopic
         broker.publish(topic, event)
     }

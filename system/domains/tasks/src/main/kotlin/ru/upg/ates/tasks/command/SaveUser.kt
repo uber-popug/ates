@@ -1,17 +1,14 @@
-package ru.upg.ates.billing.command
+package ru.upg.ates.tasks.command
 
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.upsert
 import ru.upg.ates.Command
-import ru.upg.ates.billing.BillingContext
-import ru.upg.ates.billing.table.UserTable
 import ru.upg.ates.events.UserCreated
+import ru.upg.ates.tasks.TasksContext
+import ru.upg.ates.tasks.table.UserTable
 
-class SaveUser(
-    private val event: UserCreated
-) : Command.Silent<BillingContext> {
-
-    override fun execute(context: BillingContext) {
+class SaveUser(private val event: UserCreated) : Command.Silent<TasksContext> {
+    override fun execute(context: TasksContext) {
         transaction {
             UserTable.upsert(keys = arrayOf(UserTable.pid)) {
                 it[pid] = event.pid

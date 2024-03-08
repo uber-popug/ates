@@ -15,7 +15,7 @@ object CalculatePayments : Command.Silent<BillingContext> {
     override fun execute(context: BillingContext) = with(context) {
         transaction {
             execute(GetProfitableUsers).forEach { (user, paymentAmount) ->
-                val changeBalance = BalanceChanged.Payload(
+                val changeBalance = BalanceChanged(
                     userPid = user.pid,
                     taskPid = null,
                     reason = reason,
@@ -29,11 +29,10 @@ object CalculatePayments : Command.Silent<BillingContext> {
 
                 publish(
                     EmailCreated(
-                        context.serviceName, EmailCreated.Payload(
-                            email = user.username,
-                            theme = reason.description,
-                            text = "Направлена выплата в размере $paymentAmount"
-                        )
+                        email = user.username,
+                        theme = reason.description,
+                        text = "Направлена выплата в размере $paymentAmount",
+                        producer = context.serviceName
                     )
                 )
             }

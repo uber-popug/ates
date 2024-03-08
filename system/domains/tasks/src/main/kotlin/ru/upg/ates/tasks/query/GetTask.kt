@@ -4,20 +4,22 @@ import org.jetbrains.exposed.sql.andWhere
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import ru.upg.ates.Query
-import ru.upg.ates.tasks.TasksDomain
+import ru.upg.ates.tasks.TasksContext
 import ru.upg.ates.tasks.model.Task
+import ru.upg.ates.tasks.table.TaskTable
+import ru.upg.ates.tasks.table.UserTable
 
-class GetTaskQuery(private val id: Long) : Query<TasksDomain, Task> {
-    override fun execute(context: TasksDomain): Task {
-        val (tasks, users) = context.tables
+class GetTask(private val taskId: Long) : Query<TasksContext, Task> {
+    override fun execute(context: TasksContext): Task {
+        val (tasks, users) = TaskTable to UserTable
         return transaction {
             tasks.leftJoin(users)
                 .selectAll()
-                .andWhere { tasks.id eq this@GetTaskQuery.id }
+                .andWhere { tasks.id eq taskId }
                 .firstOrNull()
                 ?.let { Task(tasks, users, it) }
                 ?: throw IllegalStateException(
-                    "Task ${this@GetTaskQuery.id} not found"
+                    "Task $taskId not found"
                 )
         }
     }

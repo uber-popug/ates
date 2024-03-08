@@ -4,6 +4,6 @@ import ru.upg.ates.table.AtesTable
 
 object TaskTable : AtesTable("task") {
     val assignedTo = long("assigned_to_id").references(UserTable.id)
-    val name = text("name")
+    val title = text("title")
     val finished = bool("finished").default(false)
 }

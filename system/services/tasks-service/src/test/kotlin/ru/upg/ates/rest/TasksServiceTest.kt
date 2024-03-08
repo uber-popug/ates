@@ -6,7 +6,7 @@ import org.http4k.core.Method
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import ru.upg.ates.rest.handler.CreateTaskHandler
-import ru.upg.ates.tasks.TasksDomain
+import ru.upg.ates.tasks.TasksContext
 import ru.upg.ates.tasks.table.TaskTable
 import ru.upg.ates.tasks.table.UserTable
 
@@ -14,14 +14,14 @@ class TasksServiceTest {
 
     @Test
     fun test() {
-        val tables = TasksDomain.Tables(
+        val tables = TasksContext.Tables(
             TaskTable,
             UserTable
         )
 
-        val domain = TasksDomain(tables, TasksDomain.Config(
+        val domain = TasksContext(tables, TasksContext.Config(
             kafkaUrl = "http://localhost:9994",
-            db = TasksDomain.Config.Db(
+            db = TasksContext.Config.Db(
                 url = "jdbc:postgresql://localhost:5432/ates_tasks",
                 username = "postgres",
                 password = "postgres"

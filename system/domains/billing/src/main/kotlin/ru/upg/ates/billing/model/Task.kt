@@ -9,8 +9,8 @@ data class Task(
     val id: Long,
     val pid: UUID,
     val name: String,
-    val assignPrice: Int,
-    val finishPrice: Int,
+    val assignPrice: Long,
+    val finishPrice: Long,
     val finished: Boolean,
     val assignedTo: User,
 ) {

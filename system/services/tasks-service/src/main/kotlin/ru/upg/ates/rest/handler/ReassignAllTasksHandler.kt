@@ -6,16 +6,16 @@ import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.core.Status
 import ru.upg.ates.execute
-import ru.upg.ates.tasks.TasksDomain
-import ru.upg.ates.tasks.command.ReassignAllTasksCommand
+import ru.upg.ates.tasks.TasksContext
+import ru.upg.ates.tasks.command.ReassignAllTasks
 
 class ReassignAllTasksHandler(
     private val mapper: ObjectMapper,
-    private val domain: TasksDomain,
+    private val domain: TasksContext,
 ) : HttpHandler {
 
     override fun invoke(request: Request): Response {
-        domain.execute(ReassignAllTasksCommand())
+        domain.execute(ReassignAllTasks)
         return Response(Status.OK)
     }
 }

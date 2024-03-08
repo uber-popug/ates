@@ -13,7 +13,7 @@ import java.time.Instant
 
 class SavePayment(
     private val user: User,
-    private val change: BalanceChanged.Payload,
+    private val change: BalanceChanged,
 ) : Command.Silent<BillingContext> {
 
     override fun execute(context: BillingContext) {
@@ -28,11 +28,9 @@ class SavePayment(
 
             context.publish(
                 PaymentCreated(
-                    PaymentCreated.Payload(
-                        targetUserPid = user.pid,
-                        description = change.description,
-                        amount = change.outcome
-                    )
+                    targetUserPid = user.pid,
+                    description = change.description,
+                    amount = change.outcome
                 )
             )
         }

@@ -19,7 +19,7 @@ data class Task(
     ) : this(
         id = row[tasks.id].value,
         pid = row[tasks.pid],
-        name = row[tasks.name],
+        name = row[tasks.title],
         finished = row[tasks.finished],
         assignedTo = User(users, row)
     )

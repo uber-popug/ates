@@ -1,5 +1,6 @@
 package ru.upg.ates.events
 
+import ru.upg.ates.Event
 import java.util.*
 
 enum class Role(val label: String) {
@@ -8,24 +9,14 @@ enum class Role(val label: String) {
     WORKER("Работник"),
 }
 
-data class UserChange(
+data class UserCreated(
     val pid: UUID,
     val role: Role,
-    val username: String,
-)
-
-sealed class UserChanged : Event<UserChange>() {
-    data class Created(override val payload: UserChange) : UserChanged() {
-        override val jsonSchemaId = "#/users/created/1.yaml"
-        override val name = "UserCreated"
-        override val version = 1
-        override val producer = "tasks"
-    }
-
-    data class Updated(override val payload: UserChange) : UserChanged() {
-        override val jsonSchemaId = "#/users/updated/1.yaml"
-        override val name = "UserUpdated"
-        override val version = 1
-        override val producer = "tasks"
-    }
+    val username: String
+) : Event {
+    override val jsonSchemaId = "#/users/created/1.yaml"
+    override val name = "UserCreated"
+    override val version = 1
+    override val producer = "tasks"
 }
+

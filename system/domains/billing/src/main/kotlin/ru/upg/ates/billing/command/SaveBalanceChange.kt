@@ -13,24 +13,22 @@ import java.time.Instant
 class SaveBalanceChange(
     private val user: User,
     private val task: Task?,
-    private val change: BalanceChanged.Payload
-): Command<BillingContext, BalanceChanged> {
+    private val event: BalanceChanged,
+) : Command.Silent<BillingContext> {
 
-    override fun execute(context: BillingContext): BalanceChanged {
-        return transaction {
-            val now = Instant.now()
-
+    override fun execute(context: BillingContext) {
+        transaction {
             BalanceChangeTable.insert {
                 it[userId] = user.id
                 it[taskId] = task?.id
-                it[description] = change.description
-                it[reason] = change.reason
-                it[income] = change.income
-                it[outcome] = change.outcome
-                it[createdAt] = now
+                it[description] = event.description
+                it[reason] = event.reason
+                it[income] = event.income
+                it[outcome] = event.outcome
+                it[createdAt] = Instant.now()
             }
 
-            BalanceChanged(payload = change, timestamp = now)
+            context.publish(event)
         }
     }
 }

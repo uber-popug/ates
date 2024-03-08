@@ -3,38 +3,33 @@ package ru.upg.ates.auth.operation
 import org.jetbrains.exposed.sql.insertAndGetId
 import org.jetbrains.exposed.sql.transactions.transaction
 import ru.upg.ates.Command
-import ru.upg.ates.events.Event
-import ru.upg.ates.auth.AuthDomain
+import ru.upg.ates.auth.AuthContext
 import ru.upg.ates.auth.model.User
+import ru.upg.ates.auth.table.UserTable
 import ru.upg.ates.events.Role
-import ru.upg.ates.events.UserChanged
-import ru.upg.ates.events.UserChange
+import ru.upg.ates.events.UserCreated
 import java.util.*
 
 class RegisterUser(
     private val role: Role,
     private val username: String,
     private val password: String
-): Command<AuthDomain, User> {
+) : Command<AuthContext, User> {
 
-    override fun execute(context: AuthDomain): Pair<User, List<Event<*>>> {
-        val change = UserChange(
-            pid = UUID.randomUUID(),
-            role = role,
-            username = username
-        )
-
-        val id = transaction {
-            context.tables.users.let { table ->
-                table.insertAndGetId {
-                    it[pid] = change.pid
-                    it[role] = this@RegisterUser.role
-                    it[username] = this@RegisterUser.username
-                    it[password] = this@RegisterUser.password
-                }
+    override fun execute(context: AuthContext): User {
+        return transaction {
+            val userPid = UUID.randomUUID()
+            
+            val userId = UserTable.insertAndGetId {
+                it[pid] = userPid
+                it[role] = this@RegisterUser.role
+                it[username] = this@RegisterUser.username
+                it[password] = this@RegisterUser.password
             }
-        }
 
-        return User(id.value, change) to listOf(UserChanged.Created(change))
+            UserCreated(userPid, role, username)
+                .also(context::publish)
+                .let { User(userId.value, it) }
+        }
     }
 }
