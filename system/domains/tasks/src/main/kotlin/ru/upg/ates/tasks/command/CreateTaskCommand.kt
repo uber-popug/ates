@@ -36,7 +36,7 @@ class CreateTaskCommand(
         val task = transaction {
             val createdId = TaskTable.insertAndGetId {
                 it[pid] = change.pid
-                it[userId] = workerId.id
+                it[assignedTo] = workerId.id
                 it[name] = change.name
                 it[price] = change.price
                 it[finished] = change.finished

@@ -1,19 +1,18 @@
 package ru.upg.ates.events
 
-import java.time.LocalDateTime
+import java.time.Instant
 import java.util.*
 
 data class TaskChange(
     val pid: UUID,
     val userPid: UUID,
     val name: String,
-    val price: Int,
     val finished: Boolean
 )
 
 sealed class TaskCUD(
     override val id: UUID = UUID.randomUUID(),
-    override val timestamp: LocalDateTime = LocalDateTime.now(),
+    override val timestamp: Instant = Instant.now(),
 ) : CUDEvent<TaskChange> {
 
     data class Created(override val payload: TaskChange) : TaskCUD() {
@@ -33,11 +32,11 @@ sealed class TaskCUD(
 
 abstract class TaskBE<T>(
     override val id: UUID = UUID.randomUUID(),
-    override val timestamp: LocalDateTime = LocalDateTime.now(),
+    override val timestamp: Instant = Instant.now(),
 ) : BusinessEvent<T> {
 
     data class Assigned(override val payload: Payload) : TaskBE<Assigned.Payload>() {
-        data class Payload(val taskPid: UUID, val userPid: UUID)
+        data class Payload(val taskPid: UUID, val assignedTo: UUID)
 
         override val jsonSchemaId = "task-assigned-1"
         override val name = "TaskAssigned"
@@ -46,7 +45,7 @@ abstract class TaskBE<T>(
     }
 
     data class Finished(override val payload: Payload) : TaskBE<Finished.Payload>() {
-        data class Payload(val taskPid: UUID)
+        data class Payload(val taskPid: UUID, val finishedBy: UUID)
 
         override val jsonSchemaId = "task-finished-1"
         override val name = "TaskFinished"

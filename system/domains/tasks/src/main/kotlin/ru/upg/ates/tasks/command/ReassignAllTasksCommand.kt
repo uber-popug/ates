@@ -30,7 +30,7 @@ class ReassignAllTasksCommand : Command<TasksDomain, Unit> {
             tasks.batchUpsert(changes, onUpdateExclude = exclude) { (workerId, task) ->
                 this[tasks.id] = task.id
                 this[tasks.pid] = task.pid
-                this[tasks.userId] = workerId.id
+                this[tasks.assignedTo] = workerId.id
                 this[tasks.name] = task.name
                 this[tasks.price] = task.price
                 this[tasks.finished] = false

@@ -12,6 +12,7 @@
             <option value="$PROJECT_DIR$/system/common" />
             <option value="$PROJECT_DIR$/system/domains" />
             <option value="$PROJECT_DIR$/system/domains/auth" />
+            <option value="$PROJECT_DIR$/system/domains/billing" />
             <option value="$PROJECT_DIR$/system/domains/tasks" />
             <option value="$PROJECT_DIR$/system/events" />
             <option value="$PROJECT_DIR$/system/events/events-broker" />

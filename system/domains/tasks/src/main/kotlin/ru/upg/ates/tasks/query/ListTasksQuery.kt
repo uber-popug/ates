@@ -8,7 +8,6 @@ import ru.upg.ates.Query
 import ru.upg.ates.tasks.TasksDomain
 import ru.upg.ates.tasks.model.Task
 import ru.upg.ates.tasks.model.TasksList
-import java.util.*
 
 class ListTasksQuery(
     private val showFinished: Boolean = false,
@@ -32,7 +31,7 @@ class ListTasksQuery(
                 query = query.andWhere { tasks.name.lowerCase() like "%${search.lowercase()}%" }
 
             if (userId != null)
-                query = query.andWhere { tasks.userId eq userId }
+                query = query.andWhere { tasks.assignedTo eq userId }
 
             val total = query.copy().count()
             val fetchedTasks = query.limit(pageSize, offset).map { Task(tasks, users, it) }

@@ -1,12 +1,13 @@
 package ru.upg.ates.events
 
+import java.time.Instant
 import java.time.LocalDateTime
 import java.util.UUID
 
 
 interface Event<T> {
     val id: UUID
-    val timestamp: LocalDateTime
+    val timestamp: Instant
     val name: String
     val version: Int
     val jsonSchemaId: String

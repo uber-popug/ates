@@ -4,6 +4,7 @@ include(":system:common")
 include(":system:events:events-broker")
 include(":system:events:events-schema-registry")
 include(":system:domains:auth")
+include(":system:domains:billing")
 include(":system:domains:tasks")
 include(":system:services:tasks-service")
 
@@ -35,7 +36,8 @@ dependencyResolutionManagement {
             version("exposed", "0.48.0")
             library("exposed-core", "org.jetbrains.exposed", "exposed-core").versionRef("exposed")
             library("exposed-jdbc", "org.jetbrains.exposed", "exposed-jdbc").versionRef("exposed")
-            bundle("exposed", listOf("exposed-core", "exposed-jdbc"))
+            library("exposed-java-time", "org.jetbrains.exposed", "exposed-java-time").versionRef("exposed")
+            bundle("exposed", listOf("exposed-core", "exposed-jdbc", "exposed-java-time"))
 
             version("http4k", "5.13.9.0")
             library("http4k-core", "org.http4k", "http4k-core").versionRef("http4k")

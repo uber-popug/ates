@@ -26,7 +26,7 @@ class UpdateTaskCommand(
 
         val change = TaskChange(
             pid = actualTask.pid,
-            userPid = targetUser?.pid ?: actualTask.user.pid,
+            userPid = targetUser?.pid ?: actualTask.assignedTo.pid,
             name = name ?: actualTask.name,
             price = price ?: actualTask.price,
             finished = false
@@ -35,7 +35,7 @@ class UpdateTaskCommand(
         val updatedTask = transaction {
             domain.tables.tasks.let { tasks ->
                 tasks.update({ tasks.id eq this@UpdateTaskCommand.id }) { update ->
-                    update[userId] = targetUser?.id ?: actualTask.user.id
+                    update[assignedTo] = targetUser?.id ?: actualTask.assignedTo.id
                     update[price] = change.price
                     update[name] = change.name
                 }
@@ -45,8 +45,8 @@ class UpdateTaskCommand(
         }
 
         val events = mutableListOf<Event>(TaskCUD.Updated(change))
-        if (actualTask.user.id != updatedTask.user.id) {
-            events.add(TaskBE.Assigned(updatedTask.pid, updatedTask.user.pid))
+        if (actualTask.assignedTo.id != updatedTask.assignedTo.id) {
+            events.add(TaskBE.Assigned(updatedTask.pid, updatedTask.assignedTo.pid))
         }
 
         return updatedTask to events
