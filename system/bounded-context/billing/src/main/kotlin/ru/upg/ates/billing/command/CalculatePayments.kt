@@ -2,6 +2,7 @@ package ru.upg.ates.billing.command
 
 import org.jetbrains.exposed.sql.transactions.transaction
 import ru.upg.ates.Command
+import ru.upg.ates.Topic
 import ru.upg.ates.billing.BillingContext
 import ru.upg.ates.billing.query.GetProfitableUsers
 import ru.upg.ates.events.BalanceChangeReason
@@ -28,11 +29,11 @@ object CalculatePayments : Command.Silent<BillingContext> {
                 execute(SavePayment(user, changeBalance))
 
                 publish(
+                    Topic.EMAILS,
                     EmailCreated(
-                        email = user.username,
-                        theme = reason.description,
-                        text = "Направлена выплата в размере $paymentAmount",
-                        producer = context.serviceName
+                        user.username,
+                        reason.description,
+                        "Направлена выплата в размере $paymentAmount"
                     )
                 )
             }

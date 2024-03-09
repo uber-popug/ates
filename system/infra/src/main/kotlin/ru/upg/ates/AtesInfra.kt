@@ -31,6 +31,7 @@ class AtesInfra(private val config: InfraConfig) {
         )
     }
     
+    
     data class TasksHandlers(
         val listTasks: HttpHandler,
         val createTask: HttpHandler,
@@ -49,6 +50,24 @@ class AtesInfra(private val config: InfraConfig) {
             )
         )
     }
+
+
+    class BillingHandlers(
+        val getUserAccount: HttpHandler,
+        val getAdminsProfit: HttpHandler,
+        val calculatePayments: HttpHandler
+    )
+    
+    val billingService = { handlers: BillingHandlers ->
+        routes(
+            "/ping" bind Method.GET to { Response(Status.OK).body("pong") },
+            "/billing" bind routes(
+                "/accounts/{userPid}" bind Method.GET to handlers.getUserAccount,
+                "/admins-profit" bind Method.GET to handlers.getAdminsProfit,
+                "/payments/calculate" bind Method.POST to handlers.calculatePayments
+            )
+        )
+    } 
     
     
     fun initDatabase(dbConfig: InfraConfig.Db, vararg tables: Table) {

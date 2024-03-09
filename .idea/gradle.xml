@@ -20,6 +20,8 @@
             <option value="$PROJECT_DIR$/system/events/events-schema-registry" />
             <option value="$PROJECT_DIR$/system/infra" />
             <option value="$PROJECT_DIR$/system/services" />
+            <option value="$PROJECT_DIR$/system/services/analytic-service" />
+            <option value="$PROJECT_DIR$/system/services/billing-service" />
             <option value="$PROJECT_DIR$/system/services/tasks-service" />
           </set>
         </option>

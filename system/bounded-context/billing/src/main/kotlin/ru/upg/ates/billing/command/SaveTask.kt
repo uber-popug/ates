@@ -16,7 +16,7 @@ class SaveTask(
             val taskPrice = (1..20L).random()
             TaskTable.upsert(keys = arrayOf(TaskTable.pid)) {
                 it[pid] = event.pid
-                it[name] = event.name
+                it[title] = event.title
                 it[assignPrice] = assignPrice
                 it[finishPrice] = taskPrice * 2
                 it[finished] = event.finished

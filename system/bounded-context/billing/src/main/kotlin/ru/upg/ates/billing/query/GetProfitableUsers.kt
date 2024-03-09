@@ -2,6 +2,7 @@ package ru.upg.ates.billing.query
 
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.minus
 import org.jetbrains.exposed.sql.andWhere
+import org.jetbrains.exposed.sql.javatime.date
 import org.jetbrains.exposed.sql.sum
 import org.jetbrains.exposed.sql.transactions.transaction
 import ru.upg.ates.Query

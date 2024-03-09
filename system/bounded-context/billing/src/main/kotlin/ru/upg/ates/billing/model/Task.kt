@@ -21,7 +21,7 @@ data class Task(
     ) : this(
         id = row[tasks.id].value,
         pid = row[tasks.pid],
-        name = row[tasks.name],
+        name = row[tasks.title],
         assignPrice = row[tasks.assignPrice],
         finishPrice = row[tasks.finishPrice],
         finished = row[tasks.finished],

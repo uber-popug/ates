@@ -3,6 +3,7 @@ package ru.upg.ates.billing.command
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.transactions.transaction
 import ru.upg.ates.Command
+import ru.upg.ates.Topic
 import ru.upg.ates.billing.BillingContext
 import ru.upg.ates.billing.model.Task
 import ru.upg.ates.billing.model.User
@@ -28,7 +29,8 @@ class SaveBalanceChange(
                 it[createdAt] = Instant.now()
             }
 
-            context.publish(event)
+            context.publish(Topic.BALANCE_CHANGES, event)
+            context.publish(Topic.BALANCE_CHANGED, event)
         }
     }
 }

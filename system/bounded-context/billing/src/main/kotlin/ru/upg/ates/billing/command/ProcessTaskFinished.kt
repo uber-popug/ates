@@ -19,10 +19,10 @@ class ProcessTaskFinished(
     override fun execute(context: BillingContext) = with(context) {
         transaction {
             val task = execute(GetTask(event.taskPid))
-            val user = execute(GetUser(event.finishedByPid))
+            val user = execute(GetUser(task.assignedTo.pid))
 
             val change = BalanceChanged(
-                userPid = event.finishedByPid,
+                userPid = user.pid,
                 taskPid = event.taskPid,
                 reason = reason,
                 description = reason.description,

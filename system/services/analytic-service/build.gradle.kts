@@ -6,7 +6,7 @@ dependencies {
     implementation(project(":system:common"))
     implementation(project(":system:infra"))
     implementation(project(":system:events:events-broker"))
-    implementation(project(":system:bounded-context:tasks"))
+    implementation(project(":system:bounded-context:analytic"))
 
     implementation(libs.exposed.core)
     implementation(libs.bundles.logs)
