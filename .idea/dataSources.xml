@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="ates-auth@localhost" uuid="c678fc9c-c5b4-478e-92ba-e9bf05cadfeb">
+    <data-source source="LOCAL" name="ates_auth@localhost" uuid="c678fc9c-c5b4-478e-92ba-e9bf05cadfeb">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>

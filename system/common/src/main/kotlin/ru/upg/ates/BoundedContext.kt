@@ -1,17 +1,14 @@
 package ru.upg.ates
 
 import ru.upg.ates.broker.EventsBroker
-import kotlin.reflect.KClass
 
 
 interface BoundedContext {
+    val serviceName: String
     val broker: EventsBroker
-    val notFoundTopic: Topic
-    val card: Map<KClass<out Event>, Topic>
 
-    fun publish(event: Event) {
-        val topic = card[event::class] ?: notFoundTopic
-        broker.publish(topic, event)
+    fun <E : Any> publish(topic: Topic, event: E) {
+        broker.publish(serviceName, topic, event)
     }
 }
 

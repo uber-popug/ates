@@ -33,7 +33,7 @@ data class InfraConfig(
     
     companion object {
         val local = InfraConfig(
-            kafkaUrl = "https://localhost:9980",
+            kafkaUrl = "https://localhost:9994",
             schemasPath = "C:\\dev\\reps\\uber-popug\\awesome-task-exchange-system\\system\\events\\events-schema-registry\\schemas",
             services = Services(
                 auth = Service("ates-auth", 10000),

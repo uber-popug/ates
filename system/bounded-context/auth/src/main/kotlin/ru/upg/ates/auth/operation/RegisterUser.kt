@@ -3,6 +3,7 @@ package ru.upg.ates.auth.operation
 import org.jetbrains.exposed.sql.insertAndGetId
 import org.jetbrains.exposed.sql.transactions.transaction
 import ru.upg.ates.Command
+import ru.upg.ates.Topic
 import ru.upg.ates.auth.AuthContext
 import ru.upg.ates.auth.model.User
 import ru.upg.ates.auth.table.UserTable
@@ -28,7 +29,7 @@ class RegisterUser(
             }
 
             UserCreated(userPid, role, username)
-                .also(context::publish)
+                .also { context.publish(Topic.USERS, it) }
                 .let { User(userId.value, it) }
         }
     }

@@ -9,16 +9,19 @@ import ru.upg.ates.rest.handler.FinishTaskHandler
 import ru.upg.ates.rest.handler.ListTasksHandler
 import ru.upg.ates.rest.handler.ReassignAllTasksHandler
 import ru.upg.ates.tasks.TasksContext
+import ru.upg.ates.tasks.table.TaskTable
+import ru.upg.ates.tasks.table.UserTable
 
 fun main() {
-    val infra = AtesInfra(InfraConfig.local)
+    val config = InfraConfig.local
+    val dbConfig = config.databases.tasks
+    val serviceConfig = config.services.tasks
     
-    val config = infra.config.services.tasks
-    infra.config.databases.tasks.run {
-        Database.connect(url, username, password)
+    val infra = AtesInfra(config).apply {
+        initDatabase(dbConfig, UserTable, TaskTable)
     }
     
-    val domain = TasksContext(config.name, infra.kafka)
+    val domain = TasksContext(serviceConfig.name, infra.kafka)
 
     val app = infra.taskService(
         AtesInfra.TasksHandlers(
@@ -29,7 +32,5 @@ fun main() {
         )
     )
     
-    
-
-    app.asServer(Undertow(config.port)).start()
+    app.asServer(Undertow(serviceConfig.port)).start()
 }

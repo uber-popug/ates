@@ -4,9 +4,11 @@ plugins {
 
 dependencies {
     implementation(project(":system:common"))
-    implementation(project(":system:bounded-context:tasks"))
     implementation(project(":system:infra"))
+    implementation(project(":system:events:events-broker"))
+    implementation(project(":system:bounded-context:tasks"))
 
+    implementation(libs.exposed.core)
     implementation(libs.bundles.logs)
     implementation(libs.bundles.http4k)
 

@@ -11,6 +11,7 @@ dependencies {
     implementation(libs.bundles.exposed)
 
     testImplementation(kotlin("test"))
+    testImplementation(project(":system:infra"))
     testImplementation(libs.bundles.jackson)
     testImplementation(libs.jackson.yaml)
 }

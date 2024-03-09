@@ -5,7 +5,7 @@ import ru.upg.ates.Event
 import kotlin.reflect.KClass
 
 interface EventsBroker {
-    fun publish(topic: Topic, event: Event)
+    fun <E : Any> publish(producer: String, topic: Topic, event: E)
 
     fun listener(consumerGroup: String): Listener.Builder<*>
 
@@ -14,11 +14,11 @@ interface EventsBroker {
         fun listen(): Listener
 
         interface Builder<out L : Listener> {
-            fun <E : Event> register(
+            fun <E : Any> register(
                 topic: Topic,
                 kclass: KClass<E>,
                 handler: (E) -> Unit,
-            ) : Builder<L>
+            ): Builder<L>
 
             fun listen(): L
         }

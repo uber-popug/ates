@@ -1,6 +1,7 @@
 package ru.upg.ates.broker
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import com.networknt.schema.InputFormat
 import com.networknt.schema.JsonSchema
 import org.apache.kafka.clients.consumer.ConsumerRecord
@@ -8,9 +9,11 @@ import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.slf4j.LoggerFactory
+import ru.upg.ates.AtesEvent
 import ru.upg.ates.Topic
 import ru.upg.ates.Event
 import kotlin.reflect.KClass
+import kotlin.reflect.full.findAnnotation
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.toJavaDuration
 
@@ -32,24 +35,36 @@ class KafkaEventsBroker(
     private val producer = KafkaProducer<String, String>(producerProps)
 
 
-    override fun publish(topic: Topic, event: Event) {
-        val record = makeRecord(topic, event)
+    override fun <E : Any> publish(producerName: String, topic: Topic, event: E) {
+        val record = makeRecord(producerName, topic, event)
         producer.send(record).get()
     }
 
-    private fun makeRecord(topic: Topic, event: Event): ProducerRecord<String, String> {
-        val eventContent = mapper.writeValueAsString(event)
+    private fun <E : Any> makeRecord(producer: String, topic: Topic, event: E): ProducerRecord<String, String> {
+        val eventDescription = event::class.findAnnotation<Event>() ?: throw IllegalArgumentException(
+            "Not found annotation Event on payload ${event::class}"
+        )
 
-        val schema  = jsonSchemas[event.jsonSchemaId] ?: throw IllegalArgumentException(
-            "Not found json schema for id ${event.jsonSchemaId}"
+        val targetEvent = AtesEvent(
+            jsonSchemaId = eventDescription.jsonSchemaId,
+            name = eventDescription.name,
+            version = eventDescription.version,
+            producer = producer,
+            payload = mapper.valueToTree(event)
+        )
+
+        val eventContent = mapper.writeValueAsString(targetEvent)
+
+        val schema = jsonSchemas[eventDescription.jsonSchemaId] ?: throw IllegalArgumentException(
+            "Not found json schema for id ${eventDescription.jsonSchemaId}"
         )
 
         val messages = schema.validate(eventContent, InputFormat.JSON)
         if (messages.isNotEmpty()) {
             val msg = messages.joinToString { it.message }
             throw IllegalArgumentException(
-                "event ${event.name}${event.version} not corresponding " +
-                "schema ${event.jsonSchemaId} with validation message '$msg'"
+                "event $eventDescription not corresponding " +
+                    "schema ${eventDescription.jsonSchemaId} with validation message '$msg'"
             )
         }
 
@@ -99,7 +114,8 @@ class KafkaEventsBroker(
                 records.forEach { record: ConsumerRecord<String, ByteArray> ->
                     val topic: String = record.topic()
                     handlers[topic]?.let { (kclass, handler) ->
-                        val event = mapper.readValue(record.value(), kclass.java)
+                        val atesEvent = mapper.readValue<AtesEvent>(record.value())
+                        val event = mapper.treeToValue(atesEvent.payload, kclass.java)
                         handler(event)
                     }
                 }
@@ -110,11 +126,11 @@ class KafkaEventsBroker(
             private val kafkaUrl: String,
             private val consumerGroup: String,
             private val mapper: ObjectMapper,
-        ): EventsBroker.Listener.Builder<KafkaListener> {
+        ) : EventsBroker.Listener.Builder<KafkaListener> {
 
             private val handlers = mutableMapOf<String, EventHandler>()
 
-            override fun <E : Event> register(
+            override fun <E : Any> register(
                 topic: Topic,
                 kclass: KClass<E>,
                 handler: (E) -> Unit

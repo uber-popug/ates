@@ -5,6 +5,7 @@ import org.jetbrains.exposed.sql.batchUpsert
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import ru.upg.ates.Command
+import ru.upg.ates.Topic
 import ru.upg.ates.events.TaskAssigned
 import ru.upg.ates.execute
 import ru.upg.ates.tasks.TasksContext
@@ -12,6 +13,7 @@ import ru.upg.ates.tasks.model.Task
 import ru.upg.ates.tasks.query.GetRandomWorkers
 import ru.upg.ates.tasks.table.TaskTable
 import ru.upg.ates.tasks.table.UserTable
+import java.time.Instant
 
 object ReassignAllTasks : Command.Silent<TasksContext> {
     override fun execute(context: TasksContext) = with(context) {
@@ -27,6 +29,7 @@ object ReassignAllTasks : Command.Silent<TasksContext> {
                 workerId to notFinishedTasks[index]
             }
 
+            val now = Instant.now()
             val exclude = listOf(tasks.pid, tasks.title, tasks.finished)
             tasks.batchUpsert(changes, onUpdateExclude = exclude) { (workerId, task) ->
                 this[tasks.id] = task.id
@@ -34,10 +37,11 @@ object ReassignAllTasks : Command.Silent<TasksContext> {
                 this[tasks.assignedTo] = workerId.id
                 this[tasks.title] = task.name
                 this[tasks.finished] = false
+                this[tasks.updatedAt] = now
             }
 
             changes.forEach { (workerId, task) ->
-                publish(TaskAssigned(task.pid, workerId.pid))
+                publish(Topic.TASK_ASSIGNED, TaskAssigned(task.pid, workerId.pid))
             }
         }
     }

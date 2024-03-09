@@ -16,6 +16,7 @@ class FinishTask(private val taskId: Long) : Command<TasksContext, Task> {
     override fun execute(context: TasksContext): Task {
         return transaction {
             val now = Instant.now()
+            
             TaskTable.update({ TaskTable.id eq taskId }) {
                 it[finished] = true
                 it[updatedAt] = now
@@ -25,11 +26,10 @@ class FinishTask(private val taskId: Long) : Command<TasksContext, Task> {
             val task = context.execute(GetTask(taskId))
             val event = TaskFinished(
                 taskPid = task.pid,
-                finishedBy = task.assignedTo.pid,
-                timestamp = now
+                finishedBy = task.assignedTo.pid
             )
             
-            context.broker.publish(Topic.TASK_FINISHED, event)
+            context.publish(Topic.TASK_FINISHED, event)
             task
         }
     }

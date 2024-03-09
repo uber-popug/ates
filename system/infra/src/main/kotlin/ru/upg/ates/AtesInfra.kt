@@ -10,10 +10,13 @@ import org.http4k.core.Status
 import org.http4k.routing.bind
 import org.http4k.routing.routes
 import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.Table
+import org.jetbrains.exposed.sql.transactions.transaction
 import ru.upg.ates.broker.KafkaEventsBroker
 import ru.upg.ates.schema.LoadJsonSchemas
 
-class AtesInfra(val config: InfraConfig) {
+class AtesInfra(private val config: InfraConfig) {
     val eventsMapper = jacksonObjectMapper()
         .registerModule(JavaTimeModule())
         .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
@@ -36,8 +39,6 @@ class AtesInfra(val config: InfraConfig) {
     )
     
     val taskService = { handlers: TasksHandlers ->
-        println("auth database connected ${tasksDatabase.vendor}")
-        
         routes(
             "/ping" bind Method.GET to { Response(Status.OK).body("pong") },
             "/tasks" bind routes(
@@ -47,29 +48,20 @@ class AtesInfra(val config: InfraConfig) {
                 "/{taskId}/finish" bind Method.POST to handlers.finishTask
             )
         )
-    } 
+    }
     
-    val authDatabase by lazy {
-        config.databases.auth.run {
-            Database.connect(url, username, password)    
-        }
-    }
-
-    val tasksDatabase by lazy {
-        config.databases.tasks.run {
-            Database.connect(url, username, password)
-        }
-    }
-
-    val billingDatabase by lazy {
-        config.databases.billing.run {
-            Database.connect(url, username, password)
-        }
-    }
-
-    val analyticDatabase by lazy {
-        config.databases.analytic.run {
-            Database.connect(url, username, password)
+    
+    fun initDatabase(dbConfig: InfraConfig.Db, vararg tables: Table) {
+        dbConfig.run {
+            Database.connect(
+                url = url,
+                user = username,
+                password = password
+            )
+            
+            transaction {
+                SchemaUtils.createMissingTablesAndColumns(*tables)
+            }
         }
     }
 }

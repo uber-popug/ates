@@ -10,36 +10,24 @@ enum class BalanceChangeReason(val description: String) {
     PAYMENT_SENT("Направлена выплата")
 }
 
+@Event("#/billing/balance/changed/1", "BalanceChanged", 1)
 data class BalanceChanged(
     val userPid: UUID,
     val taskPid: UUID?,
     val description: String,
     val reason: BalanceChangeReason,
     val income: Long,
-    val outcome: Long,
-    override val id: UUID = UUID.randomUUID(),
-    override val timestamp: Instant = Instant.now()
-) : Event {
-    override val jsonSchemaId = "#/billing/balance/changed/1"
-    override val name = "BalanceChanged"
-    override val version = 1
-    override val producer = "billing"
-}
+    val outcome: Long
+)
 
 
 enum class PaymentStatus {
     CREATED
 }
 
+@Event("#/billing/payment/created/1", "PaymentCreated", 1)
 data class PaymentCreated(
     val targetUserPid: UUID,
     val description: String,
-    val amount: Long,
-    override val id: UUID = UUID.randomUUID(),
-    override val timestamp: Instant = Instant.now()
-) : Event {
-    override val jsonSchemaId = "#/billing/payment/created/1"
-    override val name = "PaymentCreated"
-    override val version = 1
-    override val producer = "billing"
-}
+    val amount: Long
+)

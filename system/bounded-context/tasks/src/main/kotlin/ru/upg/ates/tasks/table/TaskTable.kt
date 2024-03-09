@@ -10,5 +10,5 @@ object TaskTable : AtesTable("task") {
     val finished = bool("finished").default(false)
     val createdAt = timestamp("created_at")
     val updatedAt = timestamp("updated_at")
-    val finishedAt = timestamp("finished_at")
+    val finishedAt = timestamp("finished_at").nullable()
 }
