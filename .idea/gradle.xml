@@ -9,11 +9,11 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/system" />
+            <option value="$PROJECT_DIR$/system/bounded-context" />
+            <option value="$PROJECT_DIR$/system/bounded-context/auth" />
+            <option value="$PROJECT_DIR$/system/bounded-context/billing" />
+            <option value="$PROJECT_DIR$/system/bounded-context/tasks" />
             <option value="$PROJECT_DIR$/system/common" />
-            <option value="$PROJECT_DIR$/system/domains" />
-            <option value="$PROJECT_DIR$/system/domains/auth" />
-            <option value="$PROJECT_DIR$/system/domains/billing" />
-            <option value="$PROJECT_DIR$/system/domains/tasks" />
             <option value="$PROJECT_DIR$/system/events" />
             <option value="$PROJECT_DIR$/system/events/events-broker" />
             <option value="$PROJECT_DIR$/system/events/events-schema-registry" />

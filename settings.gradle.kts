@@ -3,11 +3,10 @@ rootProject.name = "awesome-task-exchange-system"
 include(":system:common")
 include(":system:events:events-broker")
 include(":system:events:events-schema-registry")
-include(":system:domains:auth")
-include(":system:domains:billing")
-include(":system:domains:tasks")
+include(":system:bounded-context:auth")
+include(":system:bounded-context:billing")
+include(":system:bounded-context:tasks")
 include(":system:services:tasks-service")
-
 
 // configure dependencies to all projects
 dependencyResolutionManagement {
