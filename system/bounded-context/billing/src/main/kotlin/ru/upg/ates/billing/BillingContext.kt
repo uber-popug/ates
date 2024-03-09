@@ -1,9 +1,8 @@
 package ru.upg.ates.billing
 
-import ru.upg.ates.AtesTopic
+import ru.upg.ates.Topic
 import ru.upg.ates.BoundedContext
 import ru.upg.ates.Event
-import ru.upg.ates.Topic
 import ru.upg.ates.billing.command.CalculatePayments
 import ru.upg.ates.billing.command.ProcessTaskAssigned
 import ru.upg.ates.billing.command.ProcessTaskFinished
@@ -28,19 +27,19 @@ import kotlin.reflect.KClass
 
 class BillingContext(val serviceName: String, override val broker: EventsBroker) : BoundedContext {
 
-    override val notFoundTopic = AtesTopic.NOT_FOUND
+    override val notFoundTopic = Topic.NOT_FOUND
 
     override val card: Map<KClass<out Event>, Topic> = mapOf(
-        BalanceChanged::class to AtesTopic.BALANCE_CHANGED,
-        PaymentCreated::class to AtesTopic.PAYMENT_CREATED,
-        EmailCreated::class to AtesTopic.EMAILS,
+        BalanceChanged::class to Topic.BALANCE_CHANGED,
+        PaymentCreated::class to Topic.PAYMENT_CREATED,
+        EmailCreated::class to Topic.EMAILS,
     )
 
     private val listener = broker.listener(serviceName)
-        .register(AtesTopic.USERS, UserCreated::class, handler(::SaveUser))
-        .register(AtesTopic.TASKS, TaskCreated::class, handler(::SaveTask))
-        .register(AtesTopic.TASK_ASSIGNED, TaskAssigned::class, handler(::ProcessTaskAssigned))
-        .register(AtesTopic.TASK_FINISHED, TaskFinished::class, handler(::ProcessTaskFinished))
+        .register(Topic.USERS, UserCreated::class, handler(::SaveUser))
+        .register(Topic.TASKS, TaskCreated::class, handler(::SaveTask))
+        .register(Topic.TASK_ASSIGNED, TaskAssigned::class, handler(::ProcessTaskAssigned))
+        .register(Topic.TASK_FINISHED, TaskFinished::class, handler(::ProcessTaskFinished))
         .listen()
 
     private val scheduler = run {

@@ -5,6 +5,7 @@ plugins {
 dependencies {
     implementation(project(":system:common"))
     implementation(project(":system:bounded-context:tasks"))
+    implementation(project(":system:infra"))
 
     implementation(libs.bundles.logs)
     implementation(libs.bundles.http4k)

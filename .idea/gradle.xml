@@ -18,6 +18,7 @@
             <option value="$PROJECT_DIR$/system/events" />
             <option value="$PROJECT_DIR$/system/events/events-broker" />
             <option value="$PROJECT_DIR$/system/events/events-schema-registry" />
+            <option value="$PROJECT_DIR$/system/infra" />
             <option value="$PROJECT_DIR$/system/services" />
             <option value="$PROJECT_DIR$/system/services/tasks-service" />
           </set>

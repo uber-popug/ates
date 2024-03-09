@@ -1,6 +1,7 @@
 package ru.upg.ates.events
 
 import ru.upg.ates.Event
+import java.time.Instant
 import java.util.*
 
 data class TaskCreated(
@@ -8,6 +9,8 @@ data class TaskCreated(
     val userPid: UUID,
     val title: String,
     val finished: Boolean,
+    override val id: UUID = UUID.randomUUID(),
+    override val timestamp: Instant = Instant.now()
 ) : Event {
     override val jsonSchemaId = "#/tasks/created/1"
     override val name = "TaskCreated"
@@ -18,6 +21,8 @@ data class TaskCreated(
 data class TaskAssigned(
     val taskPid: UUID,
     val assignedTo: UUID,
+    override val id: UUID = UUID.randomUUID(),
+    override val timestamp: Instant = Instant.now()
 ) : Event {
     override val jsonSchemaId = "#/tasks/assigned/1"
     override val name = "TaskAssigned"
@@ -28,6 +33,8 @@ data class TaskAssigned(
 data class TaskFinished(
     val taskPid: UUID,
     val finishedBy: UUID,
+    override val id: UUID = UUID.randomUUID(),
+    override val timestamp: Instant = Instant.now()
 ) : Event {
     override val jsonSchemaId = "#/tasks/finished/1"
     override val name = "TaskFinished"

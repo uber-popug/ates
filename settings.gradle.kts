@@ -7,6 +7,7 @@ include(":system:bounded-context:auth")
 include(":system:bounded-context:analytic")
 include(":system:bounded-context:billing")
 include(":system:bounded-context:tasks")
+include(":system:infra")
 include(":system:services:tasks-service")
 
 // configure dependencies to all projects

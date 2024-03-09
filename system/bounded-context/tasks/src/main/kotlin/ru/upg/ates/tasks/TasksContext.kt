@@ -1,6 +1,6 @@
 package ru.upg.ates.tasks
 
-import ru.upg.ates.AtesTopic
+import ru.upg.ates.Topic
 import ru.upg.ates.BoundedContext
 import ru.upg.ates.broker.EventsBroker
 import ru.upg.ates.events.TaskAssigned
@@ -15,15 +15,15 @@ class TasksContext(
     override val broker: EventsBroker
 ) : BoundedContext {
 
-    override val notFoundTopic = AtesTopic.NOT_FOUND
+    override val notFoundTopic = Topic.NOT_FOUND
 
     override val card = mapOf(
-        TaskCreated::class to AtesTopic.TASKS,
-        TaskAssigned::class to AtesTopic.TASK_ASSIGNED,
-        TaskFinished::class to AtesTopic.TASK_FINISHED
+        TaskCreated::class to Topic.TASKS,
+        TaskAssigned::class to Topic.TASK_ASSIGNED,
+        TaskFinished::class to Topic.TASK_FINISHED
     )
 
     private val listener = broker.listener(serviceName)
-        .register(AtesTopic.USERS, UserCreated::class, handler(::SaveUser))
+        .register(Topic.USERS, UserCreated::class, handler(::SaveUser))
         .listen()
 }

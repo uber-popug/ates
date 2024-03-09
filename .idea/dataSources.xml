@@ -1,25 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="postgres@localhost" uuid="453e6e0b-5cdb-46da-bd2b-110524149665">
+    <data-source source="LOCAL" name="ates-auth@localhost" uuid="c678fc9c-c5b4-478e-92ba-e9bf05cadfeb">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
-      <jdbc-url>jdbc:postgresql://localhost:5432/postgres</jdbc-url>
+      <jdbc-url>jdbc:postgresql://localhost:15432/ates-auth</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="ates_auth@localhost" uuid="c678fc9c-c5b4-478e-92ba-e9bf05cadfeb">
+    <data-source source="LOCAL" name="ates-billing@localhost" uuid="f0143c08-4012-4dbc-90f5-634d98636fa4">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
-      <jdbc-url>jdbc:postgresql://localhost:5432/ates_auth</jdbc-url>
+      <jdbc-url>jdbc:postgresql://localhost:35432/ates-billing</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="ates_tasks@localhost" uuid="554ff46e-6032-4fb1-938e-164be560a540">
+    <data-source source="LOCAL" name="ates-tasks@localhost" uuid="507afd5a-161a-4816-b0df-40120afb3539">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
-      <jdbc-url>jdbc:postgresql://localhost:5432/ates_tasks</jdbc-url>
+      <jdbc-url>jdbc:postgresql://localhost:25432/ates-tasks</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+    <data-source source="LOCAL" name="ates-analytic@localhost" uuid="8f121f2c-13eb-4a56-a367-630ad491d015">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://localhost:45432/ates-analytic</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>

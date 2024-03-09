@@ -1,10 +1,6 @@
 package ru.upg.ates
 
-interface Topic {
-    val value: String
-}
-
-enum class AtesTopic(override val value: String) : Topic {
+enum class Topic(val value: String) {
     NOT_FOUND("not-found"),
 
     // topics with CUD events
@@ -18,5 +14,5 @@ enum class AtesTopic(override val value: String) : Topic {
     TASK_ASSIGNED("tasks.assigned"),
     TASK_FINISHED("tasks.finished"),
     BALANCE_CHANGED("balance.changed"),
-    PAYMENT_CREATED("payment.created"),
+    PAYMENT_CREATED("payment.created")
 }

@@ -1,9 +1,8 @@
 package ru.upg.ates.analytic
 
-import ru.upg.ates.AtesTopic
+import ru.upg.ates.Topic
 import ru.upg.ates.BoundedContext
 import ru.upg.ates.Event
-import ru.upg.ates.Topic
 import ru.upg.ates.analytic.command.SaveBalanceChanged
 import ru.upg.ates.analytic.command.SaveTask
 import ru.upg.ates.analytic.command.SaveUser
@@ -19,12 +18,12 @@ class AnalyticContext(
     override val broker: EventsBroker
 ) : BoundedContext, EventsBroker by broker {
 
-    override val notFoundTopic = AtesTopic.NOT_FOUND
+    override val notFoundTopic = Topic.NOT_FOUND
 
     override val card: Map<KClass<out Event>, Topic> = emptyMap()
     
     private val listener = broker.listener(serviceName)
-        .register(AtesTopic.USERS, UserCreated::class, handler(::SaveUser))
-        .register(AtesTopic.TASKS, TaskCreated::class, handler(::SaveTask))
-        .register(AtesTopic.BALANCE_CHANGES, BalanceChanged::class, handler(::SaveBalanceChanged))
+        .register(Topic.USERS, UserCreated::class, handler(::SaveUser))
+        .register(Topic.TASKS, TaskCreated::class, handler(::SaveTask))
+        .register(Topic.BALANCE_CHANGES, BalanceChanged::class, handler(::SaveBalanceChanged))
 }
