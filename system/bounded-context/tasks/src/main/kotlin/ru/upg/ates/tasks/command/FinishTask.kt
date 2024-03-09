@@ -26,7 +26,7 @@ class FinishTask(private val taskId: Long) : Command<TasksContext, Task> {
             val task = context.execute(GetTask(taskId))
             val event = TaskFinished(
                 taskPid = task.pid,
-                finishedBy = task.assignedTo.pid
+                finishedByPid = task.assignedTo.pid
             )
             
             context.publish(Topic.TASK_FINISHED, event)

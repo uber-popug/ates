@@ -10,7 +10,7 @@ enum class BalanceChangeReason(val description: String) {
     PAYMENT_SENT("Направлена выплата")
 }
 
-@Event("#/billing/balance/changed/1", "BalanceChanged", 1)
+@Event("#/billing/balance/changed/1.yaml", "BalanceChanged", 1)
 data class BalanceChanged(
     val userPid: UUID,
     val taskPid: UUID?,
@@ -25,7 +25,7 @@ enum class PaymentStatus {
     CREATED
 }
 
-@Event("#/billing/payment/created/1", "PaymentCreated", 1)
+@Event("#/billing/payment/created/1.yaml", "PaymentCreated", 1)
 data class PaymentCreated(
     val targetUserPid: UUID,
     val description: String,

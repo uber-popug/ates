@@ -1,16 +1,14 @@
-id: '#/users/created/1.yaml'
+id: '#/tasks/assigned/1.yaml'
 $schema: http://json-schema.org/draft-04/schema#
 definitions:
   Payload:
     type: object
     required:
-      - pid
-      - role
-      - username
+      - taskPid
+      - assignedToPid
     properties:
-      pid:      { type: string }
-      role:     { type: string, enum: [ ADMIN, MANAGER, WORKER ] }
-      username: { type: string }
+      taskPid:          { type: string }
+      assignedToPidPid: { type: string }
 
 type: object
 required:
@@ -24,8 +22,8 @@ required:
 properties:
   id:           { type: string }
   timestamp:    { type: string }
-  name:         { enum: [ UserCreated ] }
+  name:         { enum: [ TaskAssigned ] }
   version:      { enum: [ 1 ] }
-  jsonSchemaId: { enum: [ '#/users/created/1.yaml' ] }
+  jsonSchemaId: { enum: [ '#/tasks/assigned/1.yaml' ] }
   producer:     { type: string }
   payload:      { $ref: '#/definitions/Payload' }

@@ -30,14 +30,15 @@ object ReassignAllTasks : Command.Silent<TasksContext> {
             }
 
             val now = Instant.now()
-            val exclude = listOf(tasks.pid, tasks.title, tasks.finished)
+            val exclude = TaskTable.columns - TaskTable.assignedTo
             tasks.batchUpsert(changes, onUpdateExclude = exclude) { (workerId, task) ->
                 this[tasks.id] = task.id
                 this[tasks.pid] = task.pid
                 this[tasks.assignedTo] = workerId.id
                 this[tasks.title] = task.name
-                this[tasks.finished] = false
+                this[tasks.createdAt] = now
                 this[tasks.updatedAt] = now
+                this[tasks.finished] = false
             }
 
             changes.forEach { (workerId, task) ->

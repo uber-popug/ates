@@ -19,10 +19,10 @@ class ProcessTaskAssigned(
     override fun execute(context: BillingContext) = with(context) {
         transaction {
             val task = execute(GetTask(event.taskPid))
-            val user = execute(GetUser(event.assignedTo))
+            val user = execute(GetUser(event.assignedToPid))
 
             val change = BalanceChanged(
-                userPid = event.assignedTo,
+                userPid = event.assignedToPid,
                 taskPid = event.taskPid,
                 reason = reason,
                 description = reason.description,
