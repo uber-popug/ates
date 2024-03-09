@@ -12,4 +12,6 @@ object BalanceChangeTable : LongIdTable("balance_change") {
     val income = long("income")
     val outcome = long("outcome")
     val createdAt = timestamp("created_at")
+    
+    
 }

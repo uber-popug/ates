@@ -9,7 +9,7 @@ import org.http4k.core.Status
 import org.http4k.core.queries
 import ru.upg.ates.execute
 import ru.upg.ates.tasks.TasksContext
-import ru.upg.ates.tasks.query.ListTasksQuery
+import ru.upg.ates.tasks.query.ListTasks
 
 class ListTasksHandler(
     private val mapper: ObjectMapper,
@@ -28,7 +28,7 @@ class ListTasksHandler(
         val queriesContent = mapper.writeValueAsString(request.uri.queries().toMap())
         val requestPayload = mapper.readValue<RequestPayload>(queriesContent)
         val query = requestPayload.run {
-            ListTasksQuery(
+            ListTasks(
                 showFinished = showFinished,
                 search = search,
                 userId = user,

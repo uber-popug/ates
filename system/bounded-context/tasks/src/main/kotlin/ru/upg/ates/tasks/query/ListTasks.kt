@@ -11,12 +11,12 @@ import ru.upg.ates.tasks.model.TasksList
 import ru.upg.ates.tasks.table.TaskTable
 import ru.upg.ates.tasks.table.UserTable
 
-class ListTasksQuery(
+class ListTasks(
     private val showFinished: Boolean = false,
     private val search: String?,
     private val userId: Long?,
     private val page: Long,
-    private val pageSize: Int,
+    private val pageSize: Int
 ) : Query<TasksContext, TasksList> {
 
     private val offset = (page - 1) * pageSize
