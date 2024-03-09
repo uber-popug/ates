@@ -19,6 +19,5 @@ data class TaskAssigned(
 
 @Event("#/tasks/finished/1.yaml", "TaskFinished", 1)
 data class TaskFinished(
-    val taskPid: UUID,
-    val finishedByPid: UUID
+    val taskPid: UUID
 )

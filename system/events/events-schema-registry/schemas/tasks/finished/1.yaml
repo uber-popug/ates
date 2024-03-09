@@ -1,0 +1,27 @@
+id: '#/tasks/finished/1.yaml'
+$schema: http://json-schema.org/draft-04/schema#
+definitions:
+  Payload:
+    type: object
+    required:
+      - taskPid
+    properties:
+      taskPid:          { type: string }
+
+type: object
+required:
+  - name
+  - version
+  - jsonSchemaId
+  - id
+  - timestamp
+  - producer
+  - payload
+properties:
+  id:           { type: string }
+  timestamp:    { type: string }
+  name:         { enum: [ TaskFinished ] }
+  version:      { enum: [ 1 ] }
+  jsonSchemaId: { enum: [ '#/tasks/finished/1.yaml' ] }
+  producer:     { type: string }
+  payload:      { $ref: '#/definitions/Payload' }

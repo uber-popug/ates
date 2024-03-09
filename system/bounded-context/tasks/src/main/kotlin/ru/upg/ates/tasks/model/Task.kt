@@ -8,7 +8,7 @@ import java.util.*
 data class Task(
     val id: Long,
     val pid: UUID,
-    val name: String,
+    val title: String,
     val finished: Boolean,
     val assignedTo: User,
 ) {
@@ -19,7 +19,7 @@ data class Task(
     ) : this(
         id = row[tasks.id].value,
         pid = row[tasks.pid],
-        name = row[tasks.title],
+        title = row[tasks.title],
         finished = row[tasks.finished],
         assignedTo = User(users, row)
     )

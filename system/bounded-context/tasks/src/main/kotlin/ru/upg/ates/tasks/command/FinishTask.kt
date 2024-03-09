@@ -15,21 +15,19 @@ import java.time.Instant
 class FinishTask(private val taskId: Long) : Command<TasksContext, Task> {
     override fun execute(context: TasksContext): Task {
         return transaction {
-            val now = Instant.now()
+            val task = context.execute(GetTask(taskId))
+            if (task.finished) throw IllegalStateException(
+                "Task ${task.title} already finished!"
+            )
             
+            val now = Instant.now()
             TaskTable.update({ TaskTable.id eq taskId }) {
                 it[finished] = true
                 it[updatedAt] = now
                 it[finishedAt] = now
             }
             
-            val task = context.execute(GetTask(taskId))
-            val event = TaskFinished(
-                taskPid = task.pid,
-                finishedByPid = task.assignedTo.pid
-            )
-            
-            context.publish(Topic.TASK_FINISHED, event)
+            context.publish(Topic.TASK_FINISHED, TaskFinished(task.pid))    
             task
         }
     }

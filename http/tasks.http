@@ -24,3 +24,8 @@ Content-Type: application/json
 ### reassing all tasks
 POST {{tasksHost}}/tasks/reassign
 Content-Type: application/json
+
+
+### finish task
+POST {{tasksHost}}/tasks/8/finish
+Content-Type: application/json

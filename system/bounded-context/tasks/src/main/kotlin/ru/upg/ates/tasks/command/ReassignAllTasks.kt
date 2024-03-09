@@ -35,7 +35,7 @@ object ReassignAllTasks : Command.Silent<TasksContext> {
                 this[tasks.id] = task.id
                 this[tasks.pid] = task.pid
                 this[tasks.assignedTo] = workerId.id
-                this[tasks.title] = task.name
+                this[tasks.title] = task.title
                 this[tasks.createdAt] = now
                 this[tasks.updatedAt] = now
                 this[tasks.finished] = false
