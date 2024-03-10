@@ -14,16 +14,13 @@ data class Task(
     val finished: Boolean,
     val assignedTo: User,
 ) {
-    constructor(
-        users: UserTable,
-        row: ResultRow
-    ) : this(
+    constructor(row: ResultRow) : this(
         id = row[TaskTable.id].value,
         pid = row[TaskTable.pid],
         title = row[TaskTable.title],
         assignPrice = row[TaskTable.assignPrice],
         finishPrice = row[TaskTable.finishPrice],
         finished = row[TaskTable.finished],
-        assignedTo = User(UserTable, row)
+        assignedTo = User(row)
     )
 }

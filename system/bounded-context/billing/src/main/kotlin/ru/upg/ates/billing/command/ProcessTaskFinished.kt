@@ -14,7 +14,7 @@ class ProcessTaskFinished(
     private val event: TaskFinished,
 ) : Command.Silent<BillingContext> {
 
-    private val reason = BalanceChangeReason.TASK_ASSIGNED
+    private val reason = BalanceChangeReason.TASK_FINISHED
 
     override fun execute(context: BillingContext) = with(context) {
         transaction {

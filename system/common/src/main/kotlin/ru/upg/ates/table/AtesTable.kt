@@ -22,10 +22,10 @@ fun <T : AtesTable, E> T.getById(
 
 fun <T : AtesTable, E> T.getByPid(
     entityPid: UUID,
-    entityConstructor: (T, ResultRow) -> E
+    entityConstructor: (ResultRow) -> E
 ): E? {
     return this.selectAll()
         .andWhere { pid eq entityPid }
         .firstOrNull()
-        ?.let { entityConstructor(this, it) }
+        ?.let { entityConstructor(it) }
 }

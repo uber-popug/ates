@@ -11,7 +11,7 @@ data class User(
     val role: Role,
     val username: String
 ) {
-    constructor(table: UserTable, row: ResultRow) : this(
+    constructor(row: ResultRow) : this(
         id = row[UserTable.id].value,
         pid = row[UserTable.pid],
         role = row[UserTable.role],

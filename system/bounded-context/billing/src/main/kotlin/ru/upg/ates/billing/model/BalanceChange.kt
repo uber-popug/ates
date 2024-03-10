@@ -2,7 +2,6 @@ package ru.upg.ates.billing.model
 
 import org.jetbrains.exposed.sql.ResultRow
 import ru.upg.ates.billing.table.BalanceChangeTable
-import ru.upg.ates.billing.table.UserTable
 import ru.upg.ates.events.BalanceChangeReason
 import java.time.Instant
 
@@ -22,6 +21,6 @@ data class BalanceChange(
         timestamp = row[BalanceChangeTable.createdAt],
         income = row[BalanceChangeTable.income],
         outcome = row[BalanceChangeTable.outcome],
-        task = Task(UserTable, row)
+        task = Task(row)
     )
 }

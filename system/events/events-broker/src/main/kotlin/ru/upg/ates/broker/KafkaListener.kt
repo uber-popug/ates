@@ -68,17 +68,20 @@ class KafkaListener(
         records: Iterable<ConsumerRecord<String, String>>
     ): MutableMap<TopicPartition, OffsetAndMetadata> {
         
+        fun ConsumerRecord<*, *>.str() = "record ${topic()}(${key()})"
+        
         return mutableMapOf<TopicPartition, OffsetAndMetadata>().also { processedRecords ->
-            // group fetched records by topic to process all events of the topic
-            records.groupBy { it.topic() }.forEach { (topic, records) ->
+            records.groupBy { it.topic() to it.partition() }.forEach { (topicPartition, records) ->
+                val (topic, partition) = topicPartition
+                val tp = TopicPartition(topic, partition)
+                var actualRecord: ConsumerRecord<String, String>? = null
                 
-                // be sure that events are processed from earliest to oldest
-                records.sortedBy { it.offset() }.forEach { record ->
-                    val str = "record $topic(${record.key()})"
-                    val tp = TopicPartition(record.topic(), record.partition())
-                    
-                    try {
-                        log.info("start processing $str")
+                try {
+                    // be sure that events are processed from earliest to oldest
+                    records.sortedBy { it.offset() }.forEach { record ->
+                        actualRecord = record
+                        
+                        log.info("start processing ${record.str()}")
                         val (kclass, handler) = handlers[topic] ?: throw IllegalStateException(
                             "Subscription to topic '$topic' without handler"
                         )
@@ -87,16 +90,16 @@ class KafkaListener(
                         val event = mapper.treeToValue(atesEvent.payload, kclass.java)
                         handler(event)
 
-                        log.info("$str successfully processed")
-                        
+                        log.info("${record.str()} successfully processed")
+
                         // +1 by doc to poll the next records
-                        processedRecords[tp] = OffsetAndMetadata(record.offset() + 1) 
-                    } catch (ex: Exception) {
-                        log.error("exception while processing $str '${ex.message}'")
-                        
-                        // on the next poll would be received same record
-                        processedRecords[tp] = OffsetAndMetadata(record.offset())
+                        processedRecords[tp] = OffsetAndMetadata(record.offset() + 1)
                     }
+                } catch (ex: Exception) {
+                    log.error("exception while processing ${actualRecord?.str()} '${ex.message}'")
+
+                    // on the next poll would be received same record
+                    processedRecords[tp] = OffsetAndMetadata(actualRecord!!.offset())
                 }
             }
         }

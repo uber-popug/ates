@@ -18,7 +18,7 @@ class GetTask(private val taskPid: UUID): Query<AnalyticContext, Task> {
                 .selectAll()
                 .andWhere { tasks.pid eq taskPid }
                 .firstOrNull()
-                ?.let { Task(tasks, users, it) }
+                ?.let { Task(it) }
                 ?: throw IllegalStateException("Task not found $taskPid")
         }
     }

@@ -1,0 +1,6 @@
+### ping
+GET {{analyticHost}}/ping
+
+### get analytic
+### ping
+GET {{analyticHost}}/analytic

@@ -8,7 +8,7 @@ import ru.upg.ates.billing.BillingContext
 import ru.upg.ates.billing.model.Task
 import ru.upg.ates.billing.table.TaskTable
 import ru.upg.ates.billing.table.UserTable
-import java.util.UUID
+import java.util.*
 
 class GetTask(private val taskPid: UUID): Query<BillingContext, Task> {
     override fun execute(context: BillingContext): Task {
@@ -18,7 +18,7 @@ class GetTask(private val taskPid: UUID): Query<BillingContext, Task> {
                 .selectAll()
                 .andWhere { tasks.pid eq taskPid }
                 .firstOrNull()
-                ?.let { Task(users, it) }
+                ?.let { Task(it) }
                 ?: throw IllegalStateException("Task not found $taskPid")
         }
     }

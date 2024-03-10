@@ -15,7 +15,7 @@ class SaveBalanceChanged(
     private val event: BalanceChanged,
 ) : Command.Silent<AnalyticContext> {
 
-    override fun execute(context: AnalyticContext) = with(context) {
+    override fun execute(context: AnalyticContext): Unit = with(context) {
         transaction {
             val user = execute(GetUser(event.userPid))
             val task = event.taskPid?.let { execute(GetTask(it)) }
@@ -29,8 +29,6 @@ class SaveBalanceChanged(
                 it[outcome] = event.outcome
                 it[createdAt] = Instant.now()
             }
-
-            context.publish(event)
         }
     }
 }

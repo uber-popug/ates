@@ -72,6 +72,17 @@ class AtesInfra(private val config: InfraConfig) {
     } 
     
     
+    class AnalyticHandlers(
+        val getAnalyticHandler: HttpHandler
+    )
+    
+    val analyticService = { handlers: AnalyticHandlers -> 
+        routes(
+            "/ping" bind Method.GET to { Response(Status.OK).body("pong") },
+            "/analytic" bind Method.GET to handlers.getAnalyticHandler
+        )
+    }
+    
     fun initDatabase(dbConfig: InfraConfig.Db, vararg tables: Table) {
         dbConfig.run {
             Database.connect(

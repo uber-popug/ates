@@ -20,4 +20,5 @@ class AnalyticContext(
         .register(Topic.USERS, UserCreated::class, handler(::SaveUser))
         .register(Topic.TASKS, TaskCreated::class, handler(::SaveTask))
         .register(Topic.BALANCE_CHANGES, BalanceChanged::class, handler(::SaveBalanceChanged))
+        .listen()
 }
