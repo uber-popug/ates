@@ -1,8 +1,9 @@
 package ru.upg.ates.billing.query
 
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.minus
-import org.jetbrains.exposed.sql.andWhere
-import org.jetbrains.exposed.sql.javatime.date
+import org.jetbrains.exposed.sql.alias
+import org.jetbrains.exposed.sql.joinQuery
+import org.jetbrains.exposed.sql.lastQueryAlias
 import org.jetbrains.exposed.sql.sum
 import org.jetbrains.exposed.sql.transactions.transaction
 import ru.upg.ates.Query
@@ -17,14 +18,12 @@ object GetProfitableUsers : Query<BillingContext, List<Pair<User, Long>>> {
             val totalIncome = BalanceChangeTable.income.sum()
             val totalOutcome = BalanceChangeTable.outcome.sum()
             val balance = totalIncome - totalOutcome
-            val columns = UserTable.columns + listOf(BalanceChangeTable.userId, balance)
-            BalanceChangeTable
-                .leftJoin(UserTable)
-                .select(columns)
-                .andWhere { balance greater 0L }
-                .groupBy(BalanceChangeTable.userId)
+            
+            UserTable.leftJoin(BalanceChangeTable)
+                .select(UserTable.columns + balance)
+                .groupBy(UserTable.id)
+                .having { balance greater 0L }
                 .map { User(UserTable, it) to (it[balance] ?: 0L) }
-                .filter { it.second > 0 }
         }
     }
 }

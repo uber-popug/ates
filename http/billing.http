@@ -1,0 +1,11 @@
+### ping
+GET {{billingHost}}/ping
+
+### get user account
+GET {{billingHost}}/billing/accounts/ab309e3e-b00a-402d-abef-3e4e1d3b60d0
+
+### admins profit
+GET {{billingHost}}/billing/admins-profit?from=2024-03-10&to=2024-03-10
+
+### test calc payments
+POST {{billingHost}}/billing/payments/calculate

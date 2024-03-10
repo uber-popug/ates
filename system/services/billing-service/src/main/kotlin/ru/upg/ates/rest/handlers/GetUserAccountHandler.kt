@@ -12,6 +12,7 @@ import ru.upg.ates.billing.query.GetUserBalance
 import ru.upg.ates.billing.query.ListBalanceChanges
 import ru.upg.ates.execute
 import java.time.Instant
+import java.util.UUID
 
 class GetUserAccountHandler(
     private val mapper: ObjectMapper,
@@ -38,7 +39,7 @@ class GetUserAccountHandler(
     }
 
     override fun invoke(request: Request): Response {
-        val userId = request.path("userId")?.toLong() ?: throw IllegalArgumentException(
+        val userId = request.path("userPid")?.let(UUID::fromString) ?: throw IllegalArgumentException(
             "Not found path parameter `userId`"
         )
 

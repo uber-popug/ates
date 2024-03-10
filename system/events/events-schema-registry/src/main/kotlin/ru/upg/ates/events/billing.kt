@@ -27,6 +27,7 @@ enum class PaymentStatus {
 
 @Event("#/billing/payment/created/1.yaml", "PaymentCreated", 1)
 data class PaymentCreated(
+    val paymentPid: UUID,
     val targetUserPid: UUID,
     val description: String,
     val amount: Long

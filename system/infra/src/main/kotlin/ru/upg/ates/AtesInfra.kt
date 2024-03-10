@@ -1,5 +1,6 @@
 package ru.upg.ates
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -20,6 +21,7 @@ class AtesInfra(private val config: InfraConfig) {
     val eventsMapper = jacksonObjectMapper()
         .registerModule(JavaTimeModule())
         .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+        .setSerializationInclusion(JsonInclude.Include.NON_NULL)
     
     val httpMapper = eventsMapper
     

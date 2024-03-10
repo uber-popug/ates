@@ -11,6 +11,7 @@ import ru.upg.ates.events.BalanceChanged
 import ru.upg.ates.events.PaymentCreated
 import ru.upg.ates.events.PaymentStatus
 import java.time.Instant
+import java.util.*
 
 class SavePayment(
     private val user: User,
@@ -19,7 +20,9 @@ class SavePayment(
 
     override fun execute(context: BillingContext) {
         transaction {
+            val paymentPid = UUID.randomUUID()
             PaymentTable.insert {
+                it[pid] = paymentPid
                 it[userId] = user.id
                 it[description] = change.description
                 it[amount] = change.outcome
@@ -27,7 +30,7 @@ class SavePayment(
                 it[createdAt] = Instant.now()
             }
 
-            PaymentCreated(user.pid, change.description, change.outcome).let {
+            PaymentCreated(paymentPid, user.pid, change.description, change.outcome).let {
                 context.publish(Topic.PAYMENTS, it)    
                 context.publish(Topic.PAYMENT_CREATED, it)    
             }

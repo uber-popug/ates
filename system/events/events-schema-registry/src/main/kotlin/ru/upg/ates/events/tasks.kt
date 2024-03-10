@@ -6,7 +6,7 @@ import java.util.*
 @Event("#/tasks/created/1.yaml", "TaskCreated", 1)
 data class TaskCreated(
     val pid: UUID,
-    val userPid: UUID,
+    val assignedToPid: UUID,
     val title: String,
     val finished: Boolean
 )

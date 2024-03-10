@@ -8,17 +8,18 @@ import ru.upg.ates.billing.model.BalanceChange
 import ru.upg.ates.billing.table.BalanceChangeTable
 import ru.upg.ates.billing.table.TaskTable
 import ru.upg.ates.billing.table.UserTable
+import java.util.UUID
 
 class ListBalanceChanges(
-    private val userId: Long
+    private val userPid: UUID
 ) : Query<BillingContext, List<BalanceChange>> {
     
     override fun execute(context: BillingContext): List<BalanceChange> {
         return transaction { 
             BalanceChangeTable
                 .leftJoin(TaskTable.leftJoin(UserTable))
-                .select(BalanceChangeTable.columns + TaskTable.columns)
-                .andWhere { BalanceChangeTable.userId eq userId }
+                .select(BalanceChangeTable.columns + TaskTable.columns + UserTable.columns)
+                .andWhere { UserTable.pid eq userPid }
                 .map { BalanceChange(it) }
         }
     }
