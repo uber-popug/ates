@@ -13,8 +13,8 @@ import java.time.ZoneOffset
 object GetAmountNegativeBalances : Query<AnalyticContext, Long> {
     override fun execute(context: AnalyticContext): Long {
         return transaction {
-            val startDay = LocalDate.now().atStartOfDay().toInstant(ZoneOffset.UTC)
-            val endDay = LocalDate.now().plusDays(1).atStartOfDay().toInstant(ZoneOffset.UTC)
+            val startDay = LocalDate.now().atStartOfDay(ZoneOffset.systemDefault()).toInstant()
+            val endDay = LocalDate.now().plusDays(1).atStartOfDay(ZoneOffset.systemDefault()).toInstant()
             val totalIncome = BalanceChangeTable.income.sum()
             val totalOutcome = BalanceChangeTable.outcome.sum()
             val balance = totalIncome - totalOutcome

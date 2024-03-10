@@ -22,7 +22,7 @@ object ReassignAllTasks : Command.Silent<TasksContext> {
             val notFinishedTasks =
                 tasks.leftJoin(users).selectAll()
                     .andWhere { tasks.finished eq false }
-                    .map { Task(tasks, users, it) }
+                    .map { Task(it) }
 
             val workerIds = execute(GetRandomWorkers(notFinishedTasks.size))
             val changes = workerIds.mapIndexed { index, workerId ->
@@ -36,6 +36,7 @@ object ReassignAllTasks : Command.Silent<TasksContext> {
                 this[tasks.pid] = task.pid
                 this[tasks.assignedTo] = workerId.id
                 this[tasks.title] = task.title
+                this[tasks.jiraId] = task.jiraId
                 this[tasks.createdAt] = now
                 this[tasks.updatedAt] = now
                 this[tasks.finished] = false

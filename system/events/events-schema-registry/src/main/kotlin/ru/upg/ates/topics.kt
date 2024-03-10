@@ -5,7 +5,9 @@ enum class Topic(val value: String) {
 
     // topics with CUD events
     USERS("users"),
-    TASKS("tasks"),
+    @Deprecated("Use new topic with new version of tasks stream 'tasks.2'")
+    TASKS_V1("tasks"),
+    TASKS_V2("tasks.2"),
     BALANCE_CHANGES("balance-changes"),
     PAYMENTS("payments"),
     EMAILS("emails"),

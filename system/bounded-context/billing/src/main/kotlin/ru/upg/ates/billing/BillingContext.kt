@@ -27,7 +27,7 @@ class BillingContext(
 
     private val listener = broker.listener(serviceName)
         .register(Topic.USERS, UserCreated::class, handler(::SaveUser))
-        .register(Topic.TASKS, TaskCreatedV1::class, handler(::SaveTask))
+        .register(Topic.TASKS_V1, TaskCreatedV1::class, handler(::SaveTask))
         .register(Topic.TASK_ASSIGNED, TaskAssigned::class, handler(::ProcessTaskAssigned))
         .register(Topic.TASK_FINISHED, TaskFinished::class, handler(::ProcessTaskFinished))
         .listen()

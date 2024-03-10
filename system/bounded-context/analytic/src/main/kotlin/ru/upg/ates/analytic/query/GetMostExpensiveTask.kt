@@ -20,8 +20,8 @@ class GetMostExpensiveTask(
 
     override fun execute(context: AnalyticContext): Task? {
         return transaction {
-            val fromInstant = from.atStartOfDay().toInstant(ZoneOffset.UTC)
-            val toInstant = to.plusDays(1).atStartOfDay().toInstant(ZoneOffset.UTC)
+            val fromInstant = from.atStartOfDay(ZoneOffset.systemDefault()).toInstant()
+            val toInstant = to.plusDays(1).atStartOfDay(ZoneOffset.systemDefault()).toInstant()
             TaskTable.leftJoin(BalanceChangeTable)
                 .select(TaskTable.columns + BalanceChangeTable.income.max())
                 .andWhere { BalanceChangeTable.taskId.isNotNull() }

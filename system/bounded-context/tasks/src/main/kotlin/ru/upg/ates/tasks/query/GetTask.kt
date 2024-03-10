@@ -17,7 +17,7 @@ class GetTask(private val taskId: Long) : Query<TasksContext, Task> {
                 .selectAll()
                 .andWhere { tasks.id eq taskId }
                 .firstOrNull()
-                ?.let { Task(tasks, users, it) }
+                ?.let { Task(it) }
                 ?: throw IllegalStateException(
                     "Task $taskId not found"
                 )

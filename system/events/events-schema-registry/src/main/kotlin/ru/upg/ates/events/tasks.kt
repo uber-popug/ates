@@ -17,7 +17,7 @@ data class TaskCreatedV2(
     val pid: UUID,
     val assignedToPid: UUID,
     val title: String,
-    val jiraId: String,
+    val jiraId: Long,
     val finished: Boolean,
 )
 

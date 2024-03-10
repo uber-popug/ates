@@ -10,8 +10,7 @@ import ru.upg.ates.tasks.table.UserTable
 class GetUser(private val id: Long) : Query<TasksContext, User> {
     override fun execute(context: TasksContext): User {
         return transaction {
-            UserTable
-                .getById(this@GetUser.id, ::User)
+            UserTable.getById(this@GetUser.id, ::User)
                 ?: throw IllegalArgumentException("Not found user by id $id")
         }
     }

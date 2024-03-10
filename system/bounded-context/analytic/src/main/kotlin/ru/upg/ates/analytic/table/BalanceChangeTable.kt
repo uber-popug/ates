@@ -13,5 +13,5 @@ object BalanceChangeTable : LongIdTable("balance_change") {
     val description = text("description")
     val income = long("income")
     val outcome = long("outcome")
-    val createdAt = timestamp("created_at").defaultExpression(CurrentTimestamp())
+    val createdAt = timestamp("created_at")
 }

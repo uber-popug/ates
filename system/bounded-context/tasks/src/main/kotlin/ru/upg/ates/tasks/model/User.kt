@@ -11,10 +11,10 @@ data class User(
     val role: Role,
     val username: String
 ) {
-    constructor(table: UserTable, row: ResultRow) : this(
-        id = row[table.id].value,
-        pid = row[table.pid],
-        role = row[table.role],
-        username = row[table.username]
+    constructor(row: ResultRow) : this(
+        id = row[UserTable.id].value,
+        pid = row[UserTable.pid],
+        role = row[UserTable.role],
+        username = row[UserTable.username]
     )
 }

@@ -37,7 +37,7 @@ class ListTasks(
                 query = query.andWhere { tasks.assignedTo eq userId }
 
             val total = query.copy().count()
-            val fetchedTasks = query.limit(pageSize, offset).map { Task(tasks, users, it) }
+            val fetchedTasks = query.limit(pageSize, offset).map { Task(it) }
             PageableList(page, pageSize, total, fetchedTasks)
         }
     }

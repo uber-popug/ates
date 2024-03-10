@@ -18,7 +18,7 @@ class AnalyticContext(
 
     private val listener = broker.listener(serviceName)
         .register(Topic.USERS, UserCreated::class, handler(::SaveUser))
-        .register(Topic.TASKS, TaskCreatedV1::class, handler(::SaveTask))
+        .register(Topic.TASKS_V1, TaskCreatedV1::class, handler(::SaveTask))
         .register(Topic.BALANCE_CHANGES, BalanceChanged::class, handler(::SaveBalanceChanged))
         .listen()
 }

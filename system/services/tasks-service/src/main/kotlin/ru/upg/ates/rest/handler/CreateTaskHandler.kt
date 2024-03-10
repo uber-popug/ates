@@ -27,9 +27,12 @@ class CreateTaskHandler(
 
     override fun invoke(request: Request): Response {
         val requestContent = request.bodyString()
-        val payload = mapper.readValue<RequestPayload>(requestContent)
+        val (name) = mapper.readValue<RequestPayload>(requestContent)
+        if (name.contains("[") || name.contains("]")) throw IllegalArgumentException(
+            "Found illegal characters in task name ']' or '['"
+        )
 
-        val command = CreateTask(payload.name)
+        val command = CreateTask(name)
         val result = domain.execute(command)
 
         val responsePayload = ResponsePayload(result)
