@@ -6,11 +6,11 @@ import ru.upg.ates.Command
 import ru.upg.ates.billing.BillingContext
 import ru.upg.ates.billing.query.GetUser
 import ru.upg.ates.billing.table.TaskTable
-import ru.upg.ates.events.TaskCreated
+import ru.upg.ates.events.TaskCreatedV1
 import ru.upg.ates.execute
 
 class SaveTask(
-    private val event: TaskCreated
+    private val event: TaskCreatedV1
 ) : Command.Silent<BillingContext> {
 
     override fun execute(context: BillingContext) {

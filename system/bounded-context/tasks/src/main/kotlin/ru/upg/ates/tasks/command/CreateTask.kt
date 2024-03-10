@@ -5,7 +5,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import ru.upg.ates.Command
 import ru.upg.ates.Topic
 import ru.upg.ates.events.TaskAssigned
-import ru.upg.ates.events.TaskCreated
+import ru.upg.ates.events.TaskCreatedV1
 import ru.upg.ates.execute
 import ru.upg.ates.tasks.TasksContext
 import ru.upg.ates.tasks.model.Task
@@ -35,7 +35,7 @@ class CreateTask(private val taskTitle: String) : Command<TasksContext, Task> {
                 it[updatedAt] = now
             }
 
-            publish(Topic.TASKS, TaskCreated(taskPid, workerId.pid, taskTitle, false))
+            publish(Topic.TASKS, TaskCreatedV1(taskPid, workerId.pid, taskTitle, false))
             publish(Topic.TASK_ASSIGNED, TaskAssigned(taskPid, workerId.pid))
 
             execute(GetTask(createdId.value))

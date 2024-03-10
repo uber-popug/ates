@@ -7,7 +7,7 @@ import ru.upg.ates.analytic.command.SaveTask
 import ru.upg.ates.analytic.command.SaveUser
 import ru.upg.ates.broker.EventsBroker
 import ru.upg.ates.events.BalanceChanged
-import ru.upg.ates.events.TaskCreated
+import ru.upg.ates.events.TaskCreatedV1
 import ru.upg.ates.events.UserCreated
 import ru.upg.ates.handler
 
@@ -18,7 +18,7 @@ class AnalyticContext(
 
     private val listener = broker.listener(serviceName)
         .register(Topic.USERS, UserCreated::class, handler(::SaveUser))
-        .register(Topic.TASKS, TaskCreated::class, handler(::SaveTask))
+        .register(Topic.TASKS, TaskCreatedV1::class, handler(::SaveTask))
         .register(Topic.BALANCE_CHANGES, BalanceChanged::class, handler(::SaveBalanceChanged))
         .listen()
 }

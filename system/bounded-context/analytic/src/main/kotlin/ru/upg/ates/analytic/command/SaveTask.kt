@@ -6,11 +6,11 @@ import ru.upg.ates.Command
 import ru.upg.ates.analytic.AnalyticContext
 import ru.upg.ates.analytic.query.GetUser
 import ru.upg.ates.analytic.table.TaskTable
-import ru.upg.ates.events.TaskCreated
+import ru.upg.ates.events.TaskCreatedV1
 import ru.upg.ates.execute
 
 class SaveTask(
-    private val event: TaskCreated
+    private val event: TaskCreatedV1
 ) : Command.Silent<AnalyticContext> {
 
     override fun execute(context: AnalyticContext) {

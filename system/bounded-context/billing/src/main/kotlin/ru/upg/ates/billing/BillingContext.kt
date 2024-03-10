@@ -9,7 +9,7 @@ import ru.upg.ates.billing.command.SaveTask
 import ru.upg.ates.billing.command.SaveUser
 import ru.upg.ates.broker.EventsBroker
 import ru.upg.ates.events.TaskAssigned
-import ru.upg.ates.events.TaskCreated
+import ru.upg.ates.events.TaskCreatedV1
 import ru.upg.ates.events.TaskFinished
 import ru.upg.ates.events.UserCreated
 import ru.upg.ates.execute
@@ -27,7 +27,7 @@ class BillingContext(
 
     private val listener = broker.listener(serviceName)
         .register(Topic.USERS, UserCreated::class, handler(::SaveUser))
-        .register(Topic.TASKS, TaskCreated::class, handler(::SaveTask))
+        .register(Topic.TASKS, TaskCreatedV1::class, handler(::SaveTask))
         .register(Topic.TASK_ASSIGNED, TaskAssigned::class, handler(::ProcessTaskAssigned))
         .register(Topic.TASK_FINISHED, TaskFinished::class, handler(::ProcessTaskFinished))
         .listen()
