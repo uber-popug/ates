@@ -8,23 +8,22 @@ import java.util.*
 data class Task(
     val id: Long,
     val pid: UUID,
-    val name: String,
+    val title: String,
     val assignPrice: Long,
     val finishPrice: Long,
     val finished: Boolean,
     val assignedTo: User,
 ) {
     constructor(
-        tasks: TaskTable,
         users: UserTable,
         row: ResultRow
     ) : this(
-        id = row[tasks.id].value,
-        pid = row[tasks.pid],
-        name = row[tasks.title],
-        assignPrice = row[tasks.assignPrice],
-        finishPrice = row[tasks.finishPrice],
-        finished = row[tasks.finished],
-        assignedTo = User(users, row)
+        id = row[TaskTable.id].value,
+        pid = row[TaskTable.pid],
+        title = row[TaskTable.title],
+        assignPrice = row[TaskTable.assignPrice],
+        finishPrice = row[TaskTable.finishPrice],
+        finished = row[TaskTable.finished],
+        assignedTo = User(UserTable, row)
     )
 }

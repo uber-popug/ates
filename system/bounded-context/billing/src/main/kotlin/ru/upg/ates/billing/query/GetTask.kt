@@ -18,7 +18,7 @@ class GetTask(private val taskPid: UUID): Query<BillingContext, Task> {
                 .selectAll()
                 .andWhere { tasks.pid eq taskPid }
                 .firstOrNull()
-                ?.let { Task(tasks, users, it) }
+                ?.let { Task(users, it) }
                 ?: throw IllegalStateException("Task not found $taskPid")
         }
     }

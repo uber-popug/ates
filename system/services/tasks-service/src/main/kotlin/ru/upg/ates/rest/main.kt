@@ -21,14 +21,14 @@ fun main() {
         initDatabase(dbConfig, UserTable, TaskTable)
     }
     
-    val domain = TasksContext(serviceConfig.name, infra.kafka)
+    val context = TasksContext(serviceConfig.name, infra.kafka)
 
     val app = infra.taskService(
         AtesInfra.TasksHandlers(
-            listTasks = ListTasksHandler(infra.httpMapper, domain),
-            createTask = CreateTaskHandler(infra.httpMapper, domain),
-            reassignTasks = ReassignAllTasksHandler(infra.httpMapper, domain),
-            finishTask = FinishTaskHandler(infra.httpMapper, domain)
+            listTasks = ListTasksHandler(infra.httpMapper, context),
+            createTask = CreateTaskHandler(infra.httpMapper, context),
+            reassignTasks = ReassignAllTasksHandler(infra.httpMapper, context),
+            finishTask = FinishTaskHandler(infra.httpMapper, context)
         )
     )
     

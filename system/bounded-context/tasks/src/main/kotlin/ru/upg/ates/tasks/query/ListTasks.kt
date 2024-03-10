@@ -5,6 +5,7 @@ import org.jetbrains.exposed.sql.lowerCase
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import ru.upg.ates.Query
+import ru.upg.ates.model.PageableList
 import ru.upg.ates.tasks.TasksContext
 import ru.upg.ates.tasks.model.Task
 import ru.upg.ates.tasks.model.TasksList
@@ -17,11 +18,11 @@ class ListTasks(
     private val userId: Long?,
     private val page: Long,
     private val pageSize: Int
-) : Query<TasksContext, TasksList> {
+) : Query<TasksContext, PageableList<Task>> {
 
     private val offset = (page - 1) * pageSize
 
-    override fun execute(context: TasksContext): TasksList {
+    override fun execute(context: TasksContext): PageableList<Task> {
         return transaction {
             val (tasks, users) = TaskTable to UserTable
 
@@ -37,7 +38,7 @@ class ListTasks(
 
             val total = query.copy().count()
             val fetchedTasks = query.limit(pageSize, offset).map { Task(tasks, users, it) }
-            TasksList(fetchedTasks, page, pageSize, total)
+            PageableList(page, pageSize, total, fetchedTasks)
         }
     }
 }
