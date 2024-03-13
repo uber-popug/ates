@@ -3,5 +3,5 @@ plugins {
 }
 
 dependencies {
-    implementation(libs.bundles.logs)
+    implementation(libs.bundles.json.schema)
 }

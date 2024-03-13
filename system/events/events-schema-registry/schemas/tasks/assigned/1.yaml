@@ -1,0 +1,29 @@
+id: '#/tasks/assigned/1.yaml'
+$schema: http://json-schema.org/draft-04/schema#
+definitions:
+  Payload:
+    type: object
+    required:
+      - taskPid
+      - assignedToPid
+    properties:
+      taskPid:          { type: string }
+      assignedToPidPid: { type: string }
+
+type: object
+required:
+  - name
+  - version
+  - jsonSchemaId
+  - id
+  - timestamp
+  - producer
+  - payload
+properties:
+  id:           { type: string }
+  timestamp:    { type: string }
+  name:         { enum: [ TaskAssigned ] }
+  version:      { enum: [ 1 ] }
+  jsonSchemaId: { enum: [ '#/tasks/assigned/1.yaml' ] }
+  producer:     { type: string }
+  payload:      { $ref: '#/definitions/Payload' }

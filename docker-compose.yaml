@@ -26,3 +26,39 @@ services:
       - kafka
     ports:
       - "9980:8080"
+
+  ates-auth-db:
+    image: postgres
+    environment:
+      POSTGRES_DB: ates-auth
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "15432:5432"
+
+  ates-tasks-db:
+    image: postgres
+    environment:
+      POSTGRES_DB: ates-tasks
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "25432:5432"
+
+  ates-billing-db:
+    image: postgres
+    environment:
+      POSTGRES_DB: ates-billing
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "35432:5432"
+
+  ates-analytic-db:
+    image: postgres
+    environment:
+      POSTGRES_DB: ates-analytic
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "45432:5432"

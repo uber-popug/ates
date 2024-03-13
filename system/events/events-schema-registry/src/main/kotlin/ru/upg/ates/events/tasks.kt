@@ -1,21 +1,33 @@
 package ru.upg.ates.events
 
+import ru.upg.ates.Event
 import java.util.*
 
-data class TaskChange(
+@Event("#/tasks/created/1.yaml", "TaskCreated", 1)
+data class TaskCreatedV1(
     val pid: UUID,
-    val userPid: UUID,
-    val name: String,
-    val price: Int,
+    val assignedToPid: UUID,
+    val title: String,
     val finished: Boolean
 )
 
-sealed interface TaskCUD : CUDEvent {
-    data class Created(val task: TaskChange) : TaskCUD
-    data class Updated(val task: TaskChange) : TaskCUD
-}
+// added field jiraId
+@Event("#/tasks/created/2.yaml", "TaskCreated", 2)
+data class TaskCreatedV2(
+    val pid: UUID,
+    val assignedToPid: UUID,
+    val title: String,
+    val jiraId: Long,
+    val finished: Boolean,
+)
 
-interface TaskBE : BusinessEvent {
-    data class Assigned(val taskPid: UUID, val userPid: UUID) : TaskBE
-    data class Finished(val taskPid: UUID) : TaskBE
-}
+@Event("#/tasks/assigned/1.yaml", "TaskAssigned", 1)
+data class TaskAssigned(
+    val taskPid: UUID,
+    val assignedToPid: UUID
+)
+
+@Event("#/tasks/finished/1.yaml", "TaskFinished", 1)
+data class TaskFinished(
+    val taskPid: UUID
+)

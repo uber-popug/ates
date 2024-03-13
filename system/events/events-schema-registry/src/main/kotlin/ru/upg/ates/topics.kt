@@ -1,25 +1,20 @@
 package ru.upg.ates
 
-interface Topic {
-    val value: String
-}
-
-/**
- * Naming based on pattern
- * domain.classification.description
- *
- * Where:
- * - possible domains [auth, tasks]
- * - classification: [cdc - Change Data Capture, res - result of command execution]
- */
-enum class AtesTopic(override val value: String) : Topic {
+enum class Topic(val value: String) {
     NOT_FOUND("not-found"),
 
     // topics with CUD events
-    USERS("auth.cdc.user"),
-    TASKS("tasks.cdc.task"),
+    USERS("users"),
+    @Deprecated("Use new topic with new version of tasks stream 'tasks.2'")
+    TASKS_V1("tasks"),
+    TASKS_V2("tasks.2"),
+    BALANCE_CHANGES("balance-changes"),
+    PAYMENTS("payments"),
+    EMAILS("emails"),
 
     // topics with BE events
-    TASK_ASSIGNED("tasks.res.assigned"),
-    TASK_FINISHED("tasks.res.finished")
+    TASK_ASSIGNED("tasks.assigned"),
+    TASK_FINISHED("tasks.finished"),
+    BALANCE_CHANGED("balance.changed"),
+    PAYMENT_CREATED("payment.created")
 }

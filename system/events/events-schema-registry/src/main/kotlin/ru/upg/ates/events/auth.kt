@@ -1,7 +1,8 @@
 package ru.upg.ates.events
 
+import ru.upg.ates.Event
+import java.time.Instant
 import java.util.*
-
 
 enum class Role(val label: String) {
     ADMIN("Администратора"),
@@ -9,13 +10,10 @@ enum class Role(val label: String) {
     WORKER("Работник"),
 }
 
-data class UserChange(
+@Event("#/users/created/1.yaml", "UserCreated", 1)
+data class UserCreated(
     val pid: UUID,
     val role: Role,
-    val username: String,
+    val username: String
 )
 
-sealed interface UserCUD : CUDEvent {
-    data class Created(val user: UserChange) : UserCUD
-    data class Updated(val user: UserChange) : UserCUD
-}
